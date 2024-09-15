@@ -53,8 +53,8 @@ class MainActivity : ComponentActivity() {
                     .fillMaxSize()
                     .padding(WindowInsets.statusBars.asPaddingValues()).padding(top = 16.dp),
                     content = {
-                        it.calculateBottomPadding()
-                        NavHost(navController = navController, startDestination = "TaskScreenNav"){
+                        NavHost(navController = navController, startDestination = "TaskScreenNav",
+                            modifier = Modifier.padding(it)){
                             composable("TaskScreenNav"){
                                 TaskScreen()
                             }
