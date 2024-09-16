@@ -4,15 +4,11 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.viewModels
 import androidx.annotation.DrawableRes
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBars
@@ -37,6 +33,7 @@ import com.example.todoapproom.R
 import com.example.todoapproom.presentation.clockScreen.ClockScreen
 import com.example.todoapproom.presentation.taskCompletedScreen.TaskCompletedScreen
 import com.example.todoapproom.presentation.taskScreen.TaskScreen
+import com.example.todoapproom.presentation.taskScreen.TaskViewModel
 import com.example.todoapproom.ui.theme.TodoAppRoomTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -46,6 +43,9 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
+
+            val taskViewModel: TaskViewModel by viewModels()
+
             TodoAppRoomTheme {
                 val navController = rememberNavController()
 
@@ -56,7 +56,7 @@ class MainActivity : ComponentActivity() {
                         NavHost(navController = navController, startDestination = "TaskScreenNav",
                             modifier = Modifier.padding(it)){
                             composable("TaskScreenNav"){
-                                TaskScreen()
+                                TaskScreen(taskViewModel)
                             }
 
                             composable("TaskScreenCompletedNav"){

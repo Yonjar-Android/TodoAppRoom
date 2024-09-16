@@ -1,5 +1,6 @@
 package com.example.todoapproom.presentation.taskScreen
 
+import android.widget.Toast
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -26,6 +27,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.CheckboxDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.HorizontalDivider
@@ -37,6 +39,8 @@ import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -46,6 +50,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -59,29 +64,19 @@ import com.example.todoapproom.ui.theme.bgColor
 import com.example.todoapproom.ui.theme.buttonColor
 
 @Composable
-fun TaskScreen() {
+fun TaskScreen(viewModel: TaskViewModel) {
+
+    val tasks by viewModel.taskList.collectAsState()
+
+    val state by viewModel.state.collectAsState()
 
     var showMenuCreate by rememberSaveable {
         mutableStateOf(false)
     }
 
-    var taskValue by rememberSaveable {
-        mutableStateOf("")
+    LaunchedEffect(Unit) {
+        viewModel.getTask()
     }
-
-    val taskList = listOf(
-        TaskModel(123L, "Programar", isCompleted = true),
-        TaskModel(124L, "Diseñar", isCompleted = false),
-        TaskModel(1257L, "Documentar", isCompleted = false),
-        TaskModel(12222L, "IA", isCompleted = true),
-        TaskModel(12346433L, "Programar", isCompleted = true),
-        TaskModel(6, "Diseñar", isCompleted = false),
-        TaskModel(1253463467L, "Documentar", isCompleted = false),
-        TaskModel(3464363, "Programar", isCompleted = true),
-        TaskModel(436436, "Diseñar", isCompleted = false),
-        TaskModel(46346, "Documentar", isCompleted = false),
-        TaskModel(1234634222L, "IA", isCompleted = true)
-    )
 
     Column(
         modifier = Modifier
@@ -99,7 +94,7 @@ fun TaskScreen() {
         EditSpacer()
 
         LazyColumn(modifier = Modifier.weight(4f)) {
-            items(taskList, key = { it.taskId }) {
+            items(tasks, key = { it.taskId }) {
                 TaskItem(taskItem = it) { bool -> it.isCompleted = bool }
                 EditSpacer()
             }
@@ -115,11 +110,42 @@ fun TaskScreen() {
         ) {
             DialogCreateTask(
                 title = "Crear tarea",
-                textFieldValue = taskValue,
-                buttonText = "Crear"
-            ) {
-                showMenuCreate = false
+                textFieldValue = "",
+                buttonText = "Crear",
+                closeDialog = {
+                    showMenuCreate = false
+                },
+                actionFunc = {
+                    viewModel.createTask(
+                        TaskModel(
+                            taskId = 0,
+                            taskName = it,
+                            creationDate = 0,
+                            isCompleted = false
+                        )
+                    )
+                }
+            )
+        }
+    }
+
+    when (val currentState = state) {
+        is TaskScreenState.Error -> {
+            Toast.makeText(LocalContext.current, currentState.error, Toast.LENGTH_SHORT).show()
+            viewModel.resetState()
+        }
+
+        TaskScreenState.Initial -> {}
+        TaskScreenState.Loading -> {
+            Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                    CircularProgressIndicator(color = Color.Red)
             }
+        }
+
+        is TaskScreenState.Success -> {
+            Toast.makeText(LocalContext.current, currentState.successMessage, Toast.LENGTH_SHORT)
+                .show()
+            viewModel.resetState()
         }
     }
 }
@@ -171,7 +197,10 @@ fun TaskItem(taskItem: TaskModel, onCheckedChangeValue: (Boolean) -> Unit) {
                 fontWeight = FontWeight.SemiBold,
                 overflow = TextOverflow.Ellipsis,
                 maxLines = 1,
-                textAlign = TextAlign.Center
+                textAlign = TextAlign.Center,
+                modifier = Modifier
+                    .weight(1f)
+                    .padding(horizontal = 8.dp)
             )
 
             DropDownMenuTask(openDialog = {
@@ -190,10 +219,11 @@ fun TaskItem(taskItem: TaskModel, onCheckedChangeValue: (Boolean) -> Unit) {
                     DialogCreateTask(
                         title = "Editar tarea",
                         buttonText = "Actualizar",
-                        textFieldValue = taskItem.taskName
-                    ) {
-                        showEditDialog = false
-                    }
+                        textFieldValue = taskItem.taskName,
+                        closeDialog = {
+                            showEditDialog = false
+                        },
+                        actionFunc = {})
                 }
 
             }
@@ -277,7 +307,8 @@ fun DialogCreateTask(
     title: String,
     buttonText: String,
     textFieldValue: String,
-    closeDialog: () -> Unit
+    closeDialog: () -> Unit,
+    actionFunc: (String) -> Unit
 ) {
 
     var textValue by remember {
@@ -293,7 +324,9 @@ fun DialogCreateTask(
         Column(
             verticalArrangement = Arrangement.SpaceBetween,
             horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = Modifier.background(bgColor).padding(vertical = 20.dp)
+            modifier = Modifier
+                .background(bgColor)
+                .padding(vertical = 20.dp)
         ) {
             Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.End) {
                 IconButton(onClick = {
@@ -330,10 +363,11 @@ fun DialogCreateTask(
             EditSpacer()
 
             Button(
-                modifier = Modifier.padding(10.dp), onClick = {
-
+                modifier = Modifier.padding(10.dp),
+                onClick = {
+                    actionFunc(textValue)
                 },
-                colors = ButtonDefaults.buttonColors(containerColor = buttonColor)
+                colors = ButtonDefaults.buttonColors(containerColor = buttonColor),
             ) {
                 Text(
                     text = buttonText,

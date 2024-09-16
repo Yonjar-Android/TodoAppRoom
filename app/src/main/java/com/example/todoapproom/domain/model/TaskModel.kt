@@ -1,7 +1,8 @@
 package com.example.todoapproom.domain.model
 
 data class TaskModel(
-    val taskId: Long,
+    val taskId: Int,
     val taskName: String,
-    var isCompleted:Boolean
+    var isCompleted:Boolean,
+    val creationDate: Long
 )
