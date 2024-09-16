@@ -21,6 +21,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.filled.MoreVert
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Checkbox
@@ -32,6 +33,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
@@ -50,13 +52,21 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.window.Dialog
+import androidx.compose.ui.window.DialogProperties
 import com.example.todoapproom.domain.model.TaskModel
+import com.example.todoapproom.ui.theme.bgColor
+import com.example.todoapproom.ui.theme.buttonColor
 
 @Composable
 fun TaskScreen() {
 
     var showMenuCreate by rememberSaveable {
         mutableStateOf(false)
+    }
+
+    var taskValue by rememberSaveable {
+        mutableStateOf("")
     }
 
     val taskList = listOf(
@@ -72,38 +82,46 @@ fun TaskScreen() {
         TaskModel(46346, "Documentar", isCompleted = false),
         TaskModel(1234634222L, "IA", isCompleted = true)
     )
-    if (!showMenuCreate) {
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(10.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            Text(
-                text = "Todo App",
-                fontSize = 32.sp,
-                fontWeight = FontWeight.SemiBold,
-                fontStyle = FontStyle.Italic,
-            )
 
-            EditSpacer()
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(10.dp),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Text(
+            text = "Todo App",
+            fontSize = 32.sp,
+            fontWeight = FontWeight.SemiBold,
+            fontStyle = FontStyle.Italic,
+        )
 
-            LazyColumn(modifier = Modifier.weight(4f)) {
-                items(taskList, key = { it.taskId }) {
-                    TaskItem(taskItem = it) { bool -> it.isCompleted = bool }
-                    EditSpacer()
-                }
+        EditSpacer()
+
+        LazyColumn(modifier = Modifier.weight(4f)) {
+            items(taskList, key = { it.taskId }) {
+                TaskItem(taskItem = it) { bool -> it.isCompleted = bool }
+                EditSpacer()
             }
-
-                MyFabAddButton() { showMenuCreate = true }
         }
-    } else {
-        DialogCreateTask() {
-            showMenuCreate = false
+
+        MyFabAddButton() { showMenuCreate = true }
+
+    }
+    if (showMenuCreate) {
+        Dialog(
+            onDismissRequest = {},
+            properties = DialogProperties(usePlatformDefaultWidth = false)
+        ) {
+            DialogCreateTask(
+                title = "Crear tarea",
+                textFieldValue = taskValue,
+                buttonText = "Crear"
+            ) {
+                showMenuCreate = false
+            }
         }
     }
-
-
 }
 
 @Composable
@@ -112,11 +130,19 @@ fun TaskItem(taskItem: TaskModel, onCheckedChangeValue: (Boolean) -> Unit) {
         mutableStateOf(taskItem.isCompleted)
     }
 
+    var showDeleteDialog by remember {
+        mutableStateOf(false)
+    }
+
+    var showEditDialog by remember {
+        mutableStateOf(false)
+    }
+
     Box(modifier = Modifier.fillMaxWidth()) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .background(Color(0XFFA5E7FF))
+                .background(bgColor)
                 .padding(10.dp),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween
@@ -148,7 +174,35 @@ fun TaskItem(taskItem: TaskModel, onCheckedChangeValue: (Boolean) -> Unit) {
                 textAlign = TextAlign.Center
             )
 
-            DropDownMenuTask()
+            DropDownMenuTask(openDialog = {
+                showDeleteDialog = true
+            },
+                openEdit = {
+                    showEditDialog = true
+                }
+            )
+
+            if (showEditDialog) {
+                Dialog(
+                    onDismissRequest = {},
+                    properties = DialogProperties(usePlatformDefaultWidth = false)
+                ) {
+                    DialogCreateTask(
+                        title = "Editar tarea",
+                        buttonText = "Actualizar",
+                        textFieldValue = taskItem.taskName
+                    ) {
+                        showEditDialog = false
+                    }
+                }
+
+            }
+
+            if (showDeleteDialog) {
+                DeleteDialog() {
+                    showDeleteDialog = false
+                }
+            }
 
         }
     }
@@ -161,14 +215,14 @@ fun MyFabAddButton(showMenuCreate: () -> Unit) {
             showMenuCreate()
         },
         modifier = Modifier.size(65.dp),
-        colors = IconButtonDefaults.iconButtonColors(containerColor = Color(0XFFD3FFA6))
+        colors = IconButtonDefaults.iconButtonColors(containerColor = buttonColor)
     ) {
         Icon(imageVector = Icons.Filled.Add, contentDescription = "Button to add a task")
     }
 }
 
 @Composable
-fun DropDownMenuTask() {
+fun DropDownMenuTask(openDialog: () -> Unit, openEdit: () -> Unit) {
 
     var expanded by remember {
         mutableStateOf(false)
@@ -199,7 +253,7 @@ fun DropDownMenuTask() {
                     fontWeight = FontWeight.Normal
                 )
             }, onClick = {
-
+                openEdit()
             })
 
             HorizontalDivider()
@@ -212,17 +266,22 @@ fun DropDownMenuTask() {
                     fontWeight = FontWeight.Normal
                 )
             }, onClick = {
-
+                openDialog()
             })
         }
     }
 }
 
 @Composable
-fun DialogCreateTask(closeDialog: () -> Unit) {
+fun DialogCreateTask(
+    title: String,
+    buttonText: String,
+    textFieldValue: String,
+    closeDialog: () -> Unit
+) {
 
     var textValue by remember {
-        mutableStateOf("")
+        mutableStateOf(textFieldValue)
     }
 
     Box(
@@ -234,7 +293,7 @@ fun DialogCreateTask(closeDialog: () -> Unit) {
         Column(
             verticalArrangement = Arrangement.SpaceBetween,
             horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = Modifier.background(Color(0XFFA5E7FF))
+            modifier = Modifier.background(bgColor).padding(vertical = 20.dp)
         ) {
             Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.End) {
                 IconButton(onClick = {
@@ -250,7 +309,7 @@ fun DialogCreateTask(closeDialog: () -> Unit) {
 
             EditSpacer()
 
-            Text(text = "Crear tarea", fontSize = 32.sp, fontWeight = FontWeight.SemiBold)
+            Text(text = title, fontSize = 32.sp, fontWeight = FontWeight.SemiBold)
 
             EditSpacer()
 
@@ -264,7 +323,9 @@ fun DialogCreateTask(closeDialog: () -> Unit) {
                     focusedContainerColor = Color.White,
                     unfocusedContainerColor = Color.White,
                     focusedIndicatorColor = Color.Transparent,
-                    unfocusedIndicatorColor = Color.Transparent))
+                    unfocusedIndicatorColor = Color.Transparent
+                )
+            )
 
             EditSpacer()
 
@@ -272,10 +333,10 @@ fun DialogCreateTask(closeDialog: () -> Unit) {
                 modifier = Modifier.padding(10.dp), onClick = {
 
                 },
-                colors = ButtonDefaults.buttonColors(containerColor = Color(0XFFD3FFA6))
+                colors = ButtonDefaults.buttonColors(containerColor = buttonColor)
             ) {
                 Text(
-                    text = "Crear",
+                    text = buttonText,
                     fontSize = 24.sp,
                     fontStyle = FontStyle.Italic,
                     fontWeight = FontWeight.Bold,
@@ -286,6 +347,35 @@ fun DialogCreateTask(closeDialog: () -> Unit) {
             }
         }
     }
+}
+
+@Composable
+fun DeleteDialog(closeDialog: () -> Unit) {
+    AlertDialog(onDismissRequest = {},
+        confirmButton = {
+            TextButton(onClick = {
+                closeDialog()
+            }) {
+                Text(text = "Eliminar", fontSize = 14.sp, fontWeight = FontWeight.SemiBold)
+            }
+        }, dismissButton = {
+            TextButton(onClick = {
+                closeDialog()
+            }) {
+                Text(text = "Cancelar", fontSize = 14.sp, fontWeight = FontWeight.SemiBold)
+            }
+        },
+        title = {
+            Text(
+                text = "Eliminar tarea",
+                fontSize = 24.sp,
+                fontWeight = FontWeight.Bold,
+                fontStyle = FontStyle.Italic
+            )
+        },
+        text = {
+            Text(text = "¿Deseas eliminar la tarea?", fontSize = 18.sp)
+        })
 }
 
 @Composable
