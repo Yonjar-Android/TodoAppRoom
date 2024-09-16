@@ -95,7 +95,12 @@ fun TaskScreen(viewModel: TaskViewModel) {
 
         LazyColumn(modifier = Modifier.weight(4f)) {
             items(tasks, key = { it.taskId }) {
-                TaskItem(taskItem = it) { bool -> it.isCompleted = bool }
+                TaskItem(taskItem = it, viewModel = viewModel) {
+                    bool ->
+                    viewModel.editTask(taskModel = it.copy(
+                        isCompleted = bool
+                    ))
+                }
                 EditSpacer()
             }
         }
@@ -151,7 +156,7 @@ fun TaskScreen(viewModel: TaskViewModel) {
 }
 
 @Composable
-fun TaskItem(taskItem: TaskModel, onCheckedChangeValue: (Boolean) -> Unit) {
+fun TaskItem(taskItem: TaskModel, viewModel: TaskViewModel ,onCheckedChangeValue: (Boolean) -> Unit) {
     var isCompleted by rememberSaveable {
         mutableStateOf(taskItem.isCompleted)
     }
@@ -223,15 +228,26 @@ fun TaskItem(taskItem: TaskModel, onCheckedChangeValue: (Boolean) -> Unit) {
                         closeDialog = {
                             showEditDialog = false
                         },
-                        actionFunc = {})
+                        actionFunc = {
+                            viewModel.editTask(
+                                taskItem.copy(
+                                    taskName = it
+                                )
+                            )
+                        })
                 }
 
             }
 
             if (showDeleteDialog) {
-                DeleteDialog() {
-                    showDeleteDialog = false
-                }
+                DeleteDialog(
+                    deleteTask = {
+                        viewModel.deleteTask(taskItem)
+                    },
+                    closeDialog = {
+                        showDeleteDialog = false
+                    }
+                )
             }
 
         }
@@ -366,6 +382,7 @@ fun DialogCreateTask(
                 modifier = Modifier.padding(10.dp),
                 onClick = {
                     actionFunc(textValue)
+                    closeDialog()
                 },
                 colors = ButtonDefaults.buttonColors(containerColor = buttonColor),
             ) {
@@ -384,10 +401,11 @@ fun DialogCreateTask(
 }
 
 @Composable
-fun DeleteDialog(closeDialog: () -> Unit) {
+fun DeleteDialog(closeDialog: () -> Unit, deleteTask:() -> Unit) {
     AlertDialog(onDismissRequest = {},
         confirmButton = {
             TextButton(onClick = {
+                deleteTask()
                 closeDialog()
             }) {
                 Text(text = "Eliminar", fontSize = 14.sp, fontWeight = FontWeight.SemiBold)

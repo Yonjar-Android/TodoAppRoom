@@ -44,6 +44,22 @@ class TaskViewModel @Inject constructor(
         }
     }
 
+    fun editTask(taskModel: TaskModel){
+        viewModelScope.launch {
+            repositoryCRUDImp.updateTask(taskModel)
+            getTask()
+            _state.value = TaskScreenState.Success("Se ha actualizado la tarea correctamente")
+        }
+    }
+
+    fun deleteTask(taskModel: TaskModel){
+        viewModelScope.launch {
+            repositoryCRUDImp.deleteTask(taskModel)
+            getTask()
+            _state.value = TaskScreenState.Error("Se ha eliminado la tarea correctamente")
+        }
+    }
+
     fun resetState() {
         _state.value = TaskScreenState.Initial
     }

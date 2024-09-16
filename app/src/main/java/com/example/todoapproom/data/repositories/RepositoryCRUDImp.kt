@@ -18,10 +18,14 @@ class RepositoryCRUDImp @Inject constructor(private val taskDao: TaskDao) : IRep
     }
 
     override suspend fun updateTask(taskModel: TaskModel) {
-
+        taskDao.updateTask(
+            TaskMapper.toRoomModel(taskModel)
+        )
     }
 
     override suspend fun deleteTask(taskModel: TaskModel) {
-
+        taskDao.deleteTask(
+            TaskMapper.toRoomModel(taskModel)
+        )
     }
 }
