@@ -19,6 +19,9 @@ class TaskViewModel @Inject constructor(
 ) :
     ViewModel() {
 
+    /* Estado de tareas que recibe un flow directo desde la base de datos
+      por lo que si hay un cambio en la base de datos se actualizará automáticamente*/
+
     val taskList: StateFlow<List<TaskModel>> = repositoryCRUDImp.getTasks()
         .stateIn(
             viewModelScope,
@@ -29,47 +32,96 @@ class TaskViewModel @Inject constructor(
     private val _state = MutableStateFlow(TaskScreenState())
     val state: StateFlow<TaskScreenState> = _state
 
+    // Función para la creación de tareas
+
     fun createTask(taskModel: TaskModel) {
         loadingState()
         viewModelScope.launch {
-            repositoryCRUDImp.createTask(taskModel)
-            _state.update {
-                _state.value.copy(
-                    successMessage = "Tarea creada correctamente"
-                )
+
+            try {
+                val response = repositoryCRUDImp.createTask(taskModel)
+                _state.update {
+                    if (response.contains("Error")){
+                        _state.value.copy(
+                            error = response
+                        )
+                    } else{
+                        _state.value.copy(
+                            successMessage = response
+                        )
+                    }
+
+                }
+            } catch (e: Exception) {
+                _state.update {
+                    _state.value.copy(
+                        error = e.message
+                    )
+                }
             }
         }
     }
+
+    // Función para la actualizacion de tareas
 
     fun editTask(taskModel: TaskModel) {
         loadingState()
         viewModelScope.launch {
-            repositoryCRUDImp.updateTask(taskModel)
+            try {
+               val response = repositoryCRUDImp.updateTask(taskModel)
 
-            _state.update {
-                _state.value.copy(successMessage = "Se ha actualizado la tarea correctamente")
+                _state.update {
+                    if (response.contains("Error")){
+                        _state.value.copy(error = response)
+                    } else{
+                        _state.value.copy(successMessage = response)
+                    }
+                }
+            } catch (e: Exception) {
+                _state.update {
+                    _state.value.copy(error = e.message)
+                }
             }
         }
     }
+
+    // Función para la eliminación de tareas
 
     fun deleteTask(taskModel: TaskModel) {
         loadingState()
         viewModelScope.launch {
-            repositoryCRUDImp.deleteTask(taskModel)
+            try {
+                val response = repositoryCRUDImp.deleteTask(taskModel)
 
-            _state.update {
-                _state.value.copy(
-                    error = "Se ha eliminado la tarea correctamente"
-                )
+                _state.update {
+                    if (response.contains("Error")){
+                        _state.value.copy(
+                            successMessage = response
+                        )
+                    } else{
+                        _state.value.copy(
+                            error = response
+                        )
+                    }
+
+                }
+            } catch (e: Exception) {
+                _state.update {
+                    _state.value.copy(error = e.message)
+                }
             }
         }
     }
+
+    // Función para el reseteo del estado, mensajes y carga
 
     fun resetMessages() {
         _state.update {
             _state.value.copy(error = null, successMessage = null, isLoading = false)
         }
     }
+
+    // Función para activar la pantalla de carga
 
     private fun loadingState() {
         _state.update {

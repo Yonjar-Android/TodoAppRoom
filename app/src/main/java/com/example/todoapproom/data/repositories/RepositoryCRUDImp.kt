@@ -17,21 +17,37 @@ class RepositoryCRUDImp @Inject constructor(private val taskDao: TaskDao) : IRep
         }
     }
 
-    override suspend fun createTask(taskModel: TaskModel) {
-        taskDao.insertTask(
-            TaskMapper.toRoomModel(taskModel)
-        )
+    override suspend fun createTask(taskModel: TaskModel): String {
+        return try {
+            taskDao.insertTask(TaskMapper.toRoomModel(taskModel))
+            "Tarea creada exitosamente"
+        } catch (e:Exception){
+            "Error: ${e.message}"
+        }
     }
 
-    override suspend fun updateTask(taskModel: TaskModel) {
-        taskDao.updateTask(
-            TaskMapper.toRoomModel(taskModel)
-        )
+    override suspend fun updateTask(taskModel: TaskModel): String {
+        return try {
+            taskDao.updateTask(
+                TaskMapper.toRoomModel(taskModel)
+            )
+            "Tarea actualizada exitosamente"
+        } catch (e:Exception){
+            "Error: ${e.message}"
+        }
+
     }
 
-    override suspend fun deleteTask(taskModel: TaskModel) {
-        taskDao.deleteTask(
-            TaskMapper.toRoomModel(taskModel)
-        )
+    override suspend fun deleteTask(taskModel: TaskModel): String {
+
+        return try {
+            taskDao.deleteTask(
+                TaskMapper.toRoomModel(taskModel)
+            )
+            "Tarea eliminada exitosamente"
+        } catch (e:Exception){
+            "Error: ${e.message}"
+        }
+
     }
 }
