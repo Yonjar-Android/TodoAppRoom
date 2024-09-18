@@ -5,6 +5,8 @@ import androidx.room.RoomDatabase
 import com.example.todoapproom.data.models.TaskRoomModel
 import com.example.todoapproom.data.service.dao.TaskDao
 
+// Clase de la base de datos Room
+
 @Database(
     entities = [TaskRoomModel::class], version = 1
 )

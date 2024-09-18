@@ -3,7 +3,6 @@ package com.example.todoapproom.data.models
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.example.todoapproom.domain.model.TaskModel
 
 @Entity(tableName = "task_table")
 data class TaskRoomModel(

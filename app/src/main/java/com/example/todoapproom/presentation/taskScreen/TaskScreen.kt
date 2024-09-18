@@ -75,7 +75,7 @@ fun TaskScreen(viewModel: TaskViewModel) {
         mutableStateOf(false)
     }
 
-    if (state.isLoading){
+    if (state.isLoading) {
         Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
             CircularProgressIndicator(color = Color.Red)
         }
@@ -98,11 +98,12 @@ fun TaskScreen(viewModel: TaskViewModel) {
 
         LazyColumn(modifier = Modifier.weight(4f)) {
             items(tasks, key = { it.taskId }) {
-                TaskItem(taskItem = it, viewModel = viewModel) {
-                    bool ->
-                    viewModel.editTask(taskModel = it.copy(
-                        isCompleted = bool
-                    ))
+                TaskItem(taskItem = it, viewModel = viewModel) { bool ->
+                    viewModel.editTask(
+                        taskModel = it.copy(
+                            isCompleted = bool
+                        )
+                    )
                 }
                 EditSpacer()
             }
@@ -144,7 +145,11 @@ fun TaskScreen(viewModel: TaskViewModel) {
 }
 
 @Composable
-fun TaskItem(taskItem: TaskModel, viewModel: TaskViewModel ,onCheckedChangeValue: (Boolean) -> Unit) {
+fun TaskItem(
+    taskItem: TaskModel,
+    viewModel: TaskViewModel,
+    onCheckedChangeValue: (Boolean) -> Unit
+) {
     var isCompleted by rememberSaveable {
         mutableStateOf(taskItem.isCompleted)
     }
@@ -389,7 +394,7 @@ fun DialogCreateTask(
 }
 
 @Composable
-fun DeleteDialog(closeDialog: () -> Unit, deleteTask:() -> Unit) {
+fun DeleteDialog(closeDialog: () -> Unit, deleteTask: () -> Unit) {
     AlertDialog(onDismissRequest = {},
         confirmButton = {
             TextButton(onClick = {

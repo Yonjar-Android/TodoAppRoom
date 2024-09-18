@@ -47,12 +47,15 @@ class MainActivity : ComponentActivity() {
             val taskViewModel: TaskViewModel by viewModels()
 
             TodoAppRoomTheme {
+
+
                 val navController = rememberNavController()
 
                 Scaffold(modifier = Modifier
                     .fillMaxSize()
                     .padding(WindowInsets.statusBars.asPaddingValues()).padding(top = 16.dp),
                     content = {
+                        // NavHost para determinar las rutas y pantallas para navegar
                         NavHost(navController = navController, startDestination = "TaskScreenNav",
                             modifier = Modifier.padding(it)){
                             composable("TaskScreenNav"){
@@ -75,6 +78,7 @@ class MainActivity : ComponentActivity() {
     }
 }
 
+// Componente de diseño y configuración de la navegación en la aplicación
 @Composable
 fun BottomNavigation(navHostController: NavHostController){
     var selectedIcon by rememberSaveable {
@@ -106,6 +110,7 @@ fun BottomNavigation(navHostController: NavHostController){
     }
 }
 
+// Composable para los íconos a usar en la barra de navegación
 @Composable
 fun IconMenu(@DrawableRes image:Int, description:String){
     Icon(painter = painterResource(id = image), contentDescription = description,

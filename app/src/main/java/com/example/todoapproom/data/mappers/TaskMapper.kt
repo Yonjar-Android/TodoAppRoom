@@ -3,6 +3,8 @@ package com.example.todoapproom.data.mappers
 import com.example.todoapproom.data.models.TaskRoomModel
 import com.example.todoapproom.domain.model.TaskModel
 
+// Objeto TaskMapper para la conversión de tipo de TaskModel a TaskRoomModel y viceversa
+
 object TaskMapper {
     fun fromRoomModel(taskRoomModel: TaskRoomModel): TaskModel {
         return TaskModel(
