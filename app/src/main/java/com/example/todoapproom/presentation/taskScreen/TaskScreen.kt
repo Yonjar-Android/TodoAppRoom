@@ -66,7 +66,7 @@ import com.example.todoapproom.ui.theme.buttonColor
 @Composable
 fun TaskScreen(viewModel: TaskViewModel) {
 
-    val tasks by viewModel.taskList.collectAsState()
+    val context = LocalContext.current
 
     val state by viewModel.state.collectAsState()
 
@@ -74,8 +74,10 @@ fun TaskScreen(viewModel: TaskViewModel) {
         mutableStateOf(false)
     }
 
-    LaunchedEffect(Unit) {
-        viewModel.getTask()
+    if (state.isLoading){
+        Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+            CircularProgressIndicator(color = Color.Red)
+        }
     }
 
     Column(
@@ -94,7 +96,7 @@ fun TaskScreen(viewModel: TaskViewModel) {
         EditSpacer()
 
         LazyColumn(modifier = Modifier.weight(4f)) {
-            items(tasks, key = { it.taskId }) {
+            items(state.tasks, key = { it.taskId }) {
                 TaskItem(taskItem = it, viewModel = viewModel) {
                     bool ->
                     viewModel.editTask(taskModel = it.copy(
@@ -134,25 +136,16 @@ fun TaskScreen(viewModel: TaskViewModel) {
         }
     }
 
-    when (val currentState = state) {
-        is TaskScreenState.Error -> {
-            Toast.makeText(LocalContext.current, currentState.error, Toast.LENGTH_SHORT).show()
-            viewModel.resetState()
-        }
-
-        TaskScreenState.Initial -> {}
-        TaskScreenState.Loading -> {
-            Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                    CircularProgressIndicator(color = Color.Red)
-            }
-        }
-
-        is TaskScreenState.Success -> {
-            Toast.makeText(LocalContext.current, currentState.successMessage, Toast.LENGTH_SHORT)
-                .show()
-            viewModel.resetState()
-        }
+    state.successMessage?.let {
+        Toast.makeText(context, state.successMessage, Toast.LENGTH_SHORT).show()
+        viewModel.resetMessages()
     }
+
+    state.error?.let {
+        Toast.makeText(context, state.error, Toast.LENGTH_SHORT).show()
+        viewModel.resetMessages()
+    }
+
 }
 
 @Composable

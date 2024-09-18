@@ -7,6 +7,7 @@ import com.example.todoapproom.domain.model.TaskModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -16,55 +17,70 @@ class TaskViewModel @Inject constructor(
 ) :
     ViewModel() {
 
-    private val _state = MutableStateFlow<TaskScreenState>(TaskScreenState.Initial)
+    private val _state = MutableStateFlow(TaskScreenState())
     val state: StateFlow<TaskScreenState> = _state
 
-    private val _taskList = MutableStateFlow<List<TaskModel>>(listOf())
-    val taskList: StateFlow<List<TaskModel>> = _taskList
+    init {
+        getTask()
+    }
 
-
-    fun getTask() {
+    private fun getTask() {
         loadingState()
         viewModelScope.launch {
             val list = repositoryCRUDImp.getTasks()
-            if (list.isNotEmpty()) {
-                _state.value = TaskScreenState.Success("Tasks found")
-                _taskList.value = list
-            } else {
-                _state.value = TaskScreenState.Error("There is no tasks")
-                _taskList.value = list
+
+            _state.update {
+                if (list.isNotEmpty()) {
+                    _state.value.copy(tasks = list)
+                } else {
+                    _state.value.copy(tasks = list, error = "There is no tasks")
+                }
             }
         }
     }
 
-    fun createTask(taskModel: TaskModel){
+    fun createTask(taskModel: TaskModel) {
         viewModelScope.launch {
             repositoryCRUDImp.createTask(taskModel)
             getTask()
         }
     }
 
-    fun editTask(taskModel: TaskModel){
+    fun editTask(taskModel: TaskModel) {
         viewModelScope.launch {
             repositoryCRUDImp.updateTask(taskModel)
             getTask()
-            _state.value = TaskScreenState.Success("Se ha actualizado la tarea correctamente")
+
+            _state.update {
+                _state.value.copy(successMessage = "Se ha actualizado la tarea correctamente")
+            }
         }
     }
 
-    fun deleteTask(taskModel: TaskModel){
+    fun deleteTask(taskModel: TaskModel) {
         viewModelScope.launch {
             repositoryCRUDImp.deleteTask(taskModel)
             getTask()
-            _state.value = TaskScreenState.Error("Se ha eliminado la tarea correctamente")
+
+            _state.update {
+                _state.value.copy(
+                    error = "Se ha eliminado la tarea correctamente"
+                )
+            }
         }
     }
 
-    fun resetState() {
-        _state.value = TaskScreenState.Initial
+    fun resetMessages() {
+        _state.update {
+            _state.value.copy(error = null, successMessage = null)
+        }
     }
 
     private fun loadingState() {
-        _state.value = TaskScreenState.Loading
+        _state.update {
+            _state.value.copy(
+                isLoading = true
+            )
+        }
     }
 }

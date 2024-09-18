@@ -1,11 +1,10 @@
 package com.example.todoapproom.presentation.taskScreen
 
-sealed class TaskScreenState {
-    data object Initial: TaskScreenState()
+import com.example.todoapproom.domain.model.TaskModel
 
-    data object Loading: TaskScreenState()
-
-    data class Error(val error:String): TaskScreenState()
-
-    data class Success(val successMessage:String): TaskScreenState()
-}
+data class TaskScreenState(
+    val isLoading:Boolean = false,
+    val tasks: List<TaskModel> = emptyList(),
+    val error:String? = null,
+    val successMessage:String? = null
+)
