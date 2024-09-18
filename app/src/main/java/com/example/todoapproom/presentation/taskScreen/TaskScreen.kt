@@ -68,6 +68,7 @@ fun TaskScreen(viewModel: TaskViewModel) {
 
     val context = LocalContext.current
 
+    val tasks by viewModel.taskList.collectAsState()
     val state by viewModel.state.collectAsState()
 
     var showMenuCreate by rememberSaveable {
@@ -96,7 +97,7 @@ fun TaskScreen(viewModel: TaskViewModel) {
         EditSpacer()
 
         LazyColumn(modifier = Modifier.weight(4f)) {
-            items(state.tasks, key = { it.taskId }) {
+            items(tasks, key = { it.taskId }) {
                 TaskItem(taskItem = it, viewModel = viewModel) {
                     bool ->
                     viewModel.editTask(taskModel = it.copy(

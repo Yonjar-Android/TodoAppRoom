@@ -6,7 +6,9 @@ import com.example.todoapproom.data.repositories.RepositoryCRUDImp
 import com.example.todoapproom.domain.model.TaskModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -17,39 +19,32 @@ class TaskViewModel @Inject constructor(
 ) :
     ViewModel() {
 
+    val taskList: StateFlow<List<TaskModel>> = repositoryCRUDImp.getTasks()
+        .stateIn(
+            viewModelScope,
+            SharingStarted.WhileSubscribed(5000),
+            emptyList() // Valor inicial vacío
+        )
+
     private val _state = MutableStateFlow(TaskScreenState())
     val state: StateFlow<TaskScreenState> = _state
 
-    init {
-        getTask()
-    }
-
-    private fun getTask() {
+    fun createTask(taskModel: TaskModel) {
         loadingState()
         viewModelScope.launch {
-            val list = repositoryCRUDImp.getTasks()
-
+            repositoryCRUDImp.createTask(taskModel)
             _state.update {
-                if (list.isNotEmpty()) {
-                    _state.value.copy(tasks = list)
-                } else {
-                    _state.value.copy(tasks = list, error = "There is no tasks")
-                }
+                _state.value.copy(
+                    successMessage = "Tarea creada correctamente"
+                )
             }
         }
     }
 
-    fun createTask(taskModel: TaskModel) {
-        viewModelScope.launch {
-            repositoryCRUDImp.createTask(taskModel)
-            getTask()
-        }
-    }
-
     fun editTask(taskModel: TaskModel) {
+        loadingState()
         viewModelScope.launch {
             repositoryCRUDImp.updateTask(taskModel)
-            getTask()
 
             _state.update {
                 _state.value.copy(successMessage = "Se ha actualizado la tarea correctamente")
@@ -58,9 +53,9 @@ class TaskViewModel @Inject constructor(
     }
 
     fun deleteTask(taskModel: TaskModel) {
+        loadingState()
         viewModelScope.launch {
             repositoryCRUDImp.deleteTask(taskModel)
-            getTask()
 
             _state.update {
                 _state.value.copy(
@@ -72,7 +67,7 @@ class TaskViewModel @Inject constructor(
 
     fun resetMessages() {
         _state.update {
-            _state.value.copy(error = null, successMessage = null)
+            _state.value.copy(error = null, successMessage = null, isLoading = false)
         }
     }
 
