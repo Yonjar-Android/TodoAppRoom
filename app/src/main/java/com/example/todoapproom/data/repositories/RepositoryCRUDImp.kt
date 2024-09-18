@@ -5,15 +5,20 @@ import com.example.todoapproom.data.service.dao.TaskDao
 import com.example.todoapproom.domain.model.TaskModel
 import com.example.todoapproom.domain.repositories.IRepositoryCRUD
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
 class RepositoryCRUDImp @Inject constructor(private val taskDao: TaskDao) : IRepositoryCRUD {
     override fun getTasks(): Flow<List<TaskModel>> {
-        return taskDao.getAll().map { taskRoom ->
-            taskRoom.map {taskRoomModel ->
-                TaskMapper.fromRoomModel(taskRoomModel)
+        return try {
+            taskDao.getAll().map { taskRoom ->
+                taskRoom.map { taskRoomModel ->
+                    TaskMapper.fromRoomModel(taskRoomModel)
+                }
             }
+        }catch (e:Exception){
+            flowOf(listOf())
         }
     }
 
@@ -21,7 +26,7 @@ class RepositoryCRUDImp @Inject constructor(private val taskDao: TaskDao) : IRep
         return try {
             taskDao.insertTask(TaskMapper.toRoomModel(taskModel))
             "Tarea creada exitosamente"
-        } catch (e:Exception){
+        } catch (e: Exception) {
             "Error: ${e.message}"
         }
     }
@@ -32,7 +37,7 @@ class RepositoryCRUDImp @Inject constructor(private val taskDao: TaskDao) : IRep
                 TaskMapper.toRoomModel(taskModel)
             )
             "Tarea actualizada exitosamente"
-        } catch (e:Exception){
+        } catch (e: Exception) {
             "Error: ${e.message}"
         }
 
@@ -45,7 +50,7 @@ class RepositoryCRUDImp @Inject constructor(private val taskDao: TaskDao) : IRep
                 TaskMapper.toRoomModel(taskModel)
             )
             "Tarea eliminada exitosamente"
-        } catch (e:Exception){
+        } catch (e: Exception) {
             "Error: ${e.message}"
         }
 

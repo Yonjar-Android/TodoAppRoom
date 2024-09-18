@@ -55,7 +55,7 @@ class TaskViewModelTest{
     }
 
     @Test
-    fun `createTask should change the state of message if the function is success`() = runTest {
+    fun `createTask - should update state with success message when task is created successfully`() = runTest {
 
         //  Given
         coEvery { repositoryCRUDImp.createTask(taskModel = MotherObjectTask.task) } returns MotherObjectTask.message
@@ -84,7 +84,7 @@ class TaskViewModelTest{
     }
 
     @Test
-    fun `createTask should change the state of message with an exception message error if an exception occurs`() = runTest {
+    fun `createTask - should update state with error message when an exception occurs during task creation`() = runTest {
 
         //  Given
         coEvery { repositoryCRUDImp.createTask(taskModel = MotherObjectTask.task) } throws Exception(MotherObjectTask.error)
@@ -113,7 +113,7 @@ class TaskViewModelTest{
     }
 
     @Test
-    fun `editTask should change the state of message if the function is success`() = runTest {
+    fun `editTask - should update state with success message when task is updated successfully`() = runTest {
 
         //  Given
         coEvery { repositoryCRUDImp.updateTask(taskModel = MotherObjectTask.task) } returns MotherObjectTask.message
@@ -142,7 +142,7 @@ class TaskViewModelTest{
     }
 
     @Test
-    fun `editTask should change the state of message with an exception message error if an exception occurs`() = runTest {
+    fun `editTask - should update state with error message when an exception occurs during task update`() = runTest {
 
         //  Given
         coEvery { repositoryCRUDImp.updateTask(taskModel = MotherObjectTask.task) } throws Exception(MotherObjectTask.error)
@@ -171,7 +171,7 @@ class TaskViewModelTest{
     }
 
     @Test
-    fun `deleteTask should change the state of message if the function is success`() = runTest {
+    fun `deleteTask - should update state with success message when task is deleted successfully`() = runTest {
 
         //  Given
         coEvery { repositoryCRUDImp.deleteTask(taskModel = MotherObjectTask.task) } returns MotherObjectTask.message
@@ -200,7 +200,7 @@ class TaskViewModelTest{
     }
 
     @Test
-    fun `delete should change the state of message with an exception message error if an exception occurs`() = runTest {
+    fun `deleteTask - should update state with error message when an exception occurs during task deletion`() = runTest {
 
         //  Given
         coEvery { repositoryCRUDImp.deleteTask(taskModel = MotherObjectTask.task) } throws Exception(MotherObjectTask.error)

@@ -1,5 +1,6 @@
 package com.example.todoapproom.motherObject
 
+import com.example.todoapproom.data.mappers.TaskMapper
 import com.example.todoapproom.domain.model.TaskModel
 
 object MotherObjectTask {
@@ -14,19 +15,14 @@ object MotherObjectTask {
         isCompleted = false
     )
 
-    val taskList = listOf(
-        task,
-        TaskModel(
-            taskId = 2,
-            creationDate = 3000L,
-            taskName = "Programar SQL",
-            isCompleted = true
-        ),
-        TaskModel(
-            taskId = 3,
-            creationDate = 7000L,
-            taskName = "Programar C#",
-            isCompleted = false
-        ),
+    val task2 = TaskModel(
+        taskId = 2,
+        creationDate = 3000L,
+        taskName = "Programar SQL",
+        isCompleted = true
     )
+
+    val taskList = listOf(task, task2)
+
+    val taskRoomList = listOf(TaskMapper.toRoomModel(task), TaskMapper.toRoomModel(task2))
 }
