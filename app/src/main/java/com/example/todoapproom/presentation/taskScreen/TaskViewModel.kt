@@ -41,21 +41,14 @@ class TaskViewModel @Inject constructor(
             try {
                 val response = repositoryCRUDImp.createTask(taskModel)
                 _state.update {
-                    if (response.contains("Error")){
-                        _state.value.copy(
-                            error = response
-                        )
-                    } else{
-                        _state.value.copy(
-                            successMessage = response
-                        )
-                    }
-
+                    _state.value.copy(
+                        message = response
+                    )
                 }
             } catch (e: Exception) {
                 _state.update {
                     _state.value.copy(
-                        error = e.message
+                        message = e.message
                     )
                 }
             }
@@ -71,15 +64,11 @@ class TaskViewModel @Inject constructor(
                val response = repositoryCRUDImp.updateTask(taskModel)
 
                 _state.update {
-                    if (response.contains("Error")){
-                        _state.value.copy(error = response)
-                    } else{
-                        _state.value.copy(successMessage = response)
-                    }
+                    _state.value.copy(message = response)
                 }
             } catch (e: Exception) {
                 _state.update {
-                    _state.value.copy(error = e.message)
+                    _state.value.copy(message = e.message)
                 }
             }
         }
@@ -94,20 +83,13 @@ class TaskViewModel @Inject constructor(
                 val response = repositoryCRUDImp.deleteTask(taskModel)
 
                 _state.update {
-                    if (response.contains("Error")){
-                        _state.value.copy(
-                            successMessage = response
-                        )
-                    } else{
-                        _state.value.copy(
-                            error = response
-                        )
-                    }
-
+                    _state.value.copy(
+                        message = response
+                    )
                 }
             } catch (e: Exception) {
                 _state.update {
-                    _state.value.copy(error = e.message)
+                    _state.value.copy(message = e.message)
                 }
             }
         }
@@ -117,7 +99,7 @@ class TaskViewModel @Inject constructor(
 
     fun resetMessages() {
         _state.update {
-            _state.value.copy(error = null, successMessage = null, isLoading = false)
+            _state.value.copy(message = null, isLoading = false)
         }
     }
 

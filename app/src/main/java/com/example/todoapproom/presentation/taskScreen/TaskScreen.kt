@@ -137,16 +137,10 @@ fun TaskScreen(viewModel: TaskViewModel) {
         }
     }
 
-    state.successMessage?.let {
-        Toast.makeText(context, state.successMessage, Toast.LENGTH_SHORT).show()
+    state.message?.let {
+        Toast.makeText(context, state.message, Toast.LENGTH_SHORT).show()
         viewModel.resetMessages()
     }
-
-    state.error?.let {
-        Toast.makeText(context, state.error, Toast.LENGTH_SHORT).show()
-        viewModel.resetMessages()
-    }
-
 }
 
 @Composable
