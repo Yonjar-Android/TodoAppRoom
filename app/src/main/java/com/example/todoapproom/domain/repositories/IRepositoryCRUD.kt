@@ -6,6 +6,8 @@ import kotlinx.coroutines.flow.Flow
 interface IRepositoryCRUD {
     fun getTasks(): Flow<List<TaskModel>>
 
+    fun getTasksCompleted(): Flow<List<TaskModel>>
+
     suspend fun createTask(taskModel: TaskModel): String
 
     suspend fun updateTask(taskModel: TaskModel): String

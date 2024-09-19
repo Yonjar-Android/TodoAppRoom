@@ -10,8 +10,11 @@ import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface TaskDao {
-    @Query("Select * FROM task_table")
+    @Query("Select * FROM task_table where task_completed == 0")
     fun getAll(): Flow<List<TaskRoomModel>>
+
+    @Query("SELECT * FROM task_table where task_completed == 1")
+    fun getTaskCompleted(): Flow<List<TaskRoomModel>>
 
     @Insert
     suspend fun insertTask(task:TaskRoomModel)

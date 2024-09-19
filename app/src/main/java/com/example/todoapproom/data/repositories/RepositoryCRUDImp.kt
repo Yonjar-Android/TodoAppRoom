@@ -22,6 +22,18 @@ class RepositoryCRUDImp @Inject constructor(private val taskDao: TaskDao) : IRep
         }
     }
 
+    override fun getTasksCompleted(): Flow<List<TaskModel>> {
+        return try {
+            taskDao.getTaskCompleted().map { taskRoom ->
+                taskRoom.map { taskRoomModel ->
+                    TaskMapper.fromRoomModel(taskRoomModel)
+                }
+            }
+        }catch (e:Exception){
+            flowOf(listOf())
+        }
+    }
+
     override suspend fun createTask(taskModel: TaskModel): String {
         return try {
             taskDao.insertTask(TaskMapper.toRoomModel(taskModel))

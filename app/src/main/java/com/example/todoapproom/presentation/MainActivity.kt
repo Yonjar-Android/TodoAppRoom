@@ -33,6 +33,7 @@ import androidx.navigation.compose.rememberNavController
 import com.example.todoapproom.R
 import com.example.todoapproom.presentation.clockScreen.ClockScreen
 import com.example.todoapproom.presentation.taskCompletedScreen.TaskCompletedScreen
+import com.example.todoapproom.presentation.taskCompletedScreen.TasksCompletedViewModel
 import com.example.todoapproom.presentation.taskScreen.TaskScreen
 import com.example.todoapproom.presentation.taskScreen.TaskViewModel
 import com.example.todoapproom.ui.theme.TodoAppRoomTheme
@@ -47,6 +48,8 @@ class MainActivity : ComponentActivity() {
         setContent {
 
             val taskViewModel: TaskViewModel by viewModels()
+
+            val tasksCompletedViewModel: TasksCompletedViewModel by viewModels()
 
             TodoAppRoomTheme {
 
@@ -65,7 +68,7 @@ class MainActivity : ComponentActivity() {
                             }
 
                             composable("TaskScreenCompletedNav"){
-                                TaskCompletedScreen()
+                                TaskCompletedScreen(tasksCompletedViewModel)
                             }
 
                             composable("ClockScreenNav"){
