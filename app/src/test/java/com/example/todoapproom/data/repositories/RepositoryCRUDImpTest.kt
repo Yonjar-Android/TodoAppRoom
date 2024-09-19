@@ -72,6 +72,43 @@ class RepositoryCRUDImpTest{
         }
     }
 
+    @Test
+    fun `getTasksCompleted should return a list of mapped TaskModels when successful`() = runTest {
+        // Given: Datos de prueba y comportamiento simulado del DAO
+        val taskRoomList = MotherObjectTask.taskRoomList
+
+        val expectedTaskList = MotherObjectTask.taskList
+
+        coEvery { taskDao.getTaskCompleted() } returns flowOf(taskRoomList)
+
+        // When: Llamada al método getTasks del repositorio
+        val resultFlow = repositoryCRUDImp.getTasksCompleted()
+
+        // Then: Verificación de que el resultado es correcto utilizando Turbine
+        resultFlow.test {
+            val result = awaitItem()
+            assertEquals(expectedTaskList, result)
+            awaitComplete()
+        }
+    }
+
+    @Test
+    fun `getTasksCompleted should return an empty list when an exception occurs`() = runTest {
+        // Given: Simulación de un error al llamar a taskDao.getAll()
+        val exception = RuntimeException("Database error")
+        coEvery { taskDao.getTaskCompleted() } throws exception
+
+        // When: Llamada al método getTasks del repositorio
+        val resultFlow = repositoryCRUDImp.getTasksCompleted()
+
+        // Then: Verificación de que el flujo devuelve una lista vacía
+        resultFlow.test {
+            val result = awaitItem()
+            assertTrue(result.isEmpty()) // Verifica que el resultado es una lista vacía
+            awaitComplete()
+        }
+    }
+
 
 
     @Test
