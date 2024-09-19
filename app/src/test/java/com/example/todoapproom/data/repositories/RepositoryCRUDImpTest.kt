@@ -2,9 +2,7 @@ package com.example.todoapproom.data.repositories
 
 import app.cash.turbine.test
 import com.example.todoapproom.data.mappers.TaskMapper
-import com.example.todoapproom.data.models.TaskRoomModel
 import com.example.todoapproom.data.service.dao.TaskDao
-import com.example.todoapproom.domain.model.TaskModel
 import com.example.todoapproom.motherObject.MotherObjectTask
 import io.mockk.MockKAnnotations
 import io.mockk.coEvery
@@ -14,7 +12,6 @@ import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
-import org.junit.Assert.fail
 import org.junit.Before
 import org.junit.Test
 
