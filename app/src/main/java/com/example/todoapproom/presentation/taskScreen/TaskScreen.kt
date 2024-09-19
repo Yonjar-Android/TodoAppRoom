@@ -4,6 +4,7 @@ import android.widget.Toast
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -144,6 +145,7 @@ fun TaskScreen(viewModel: TaskViewModel) {
     }
 }
 
+// Composable creado para el diseño de cada una de las tareas a mostrar, además de agregar sus funciones
 @Composable
 fun TaskItem(
     taskItem: TaskModel,
@@ -159,6 +161,10 @@ fun TaskItem(
     }
 
     var showEditDialog by remember {
+        mutableStateOf(false)
+    }
+
+    var showFullTask by remember {
         mutableStateOf(false)
     }
 
@@ -199,6 +205,9 @@ fun TaskItem(
                 modifier = Modifier
                     .weight(1f)
                     .padding(horizontal = 8.dp)
+                    .clickable {
+                        showFullTask = true
+                    }
             )
 
             DropDownMenuTask(openDialog = {
@@ -209,6 +218,33 @@ fun TaskItem(
                 }
             )
 
+            // Muestra un diálogo que te muestra el nombre completo de la tarea en caso de que sea muy larga
+            if (showFullTask) {
+                AlertDialog(onDismissRequest = {}, confirmButton = {
+                    TextButton(onClick = { showFullTask = false }) {
+                        Text(
+                            text = "OK",
+                            fontSize = 14.sp,
+                            fontWeight = FontWeight.SemiBold,
+                            fontStyle = FontStyle.Italic,
+                            textAlign = TextAlign.Center
+                        )
+                    }
+                },
+                    title = {
+                        Text(
+                            text = "Tarea",
+                            fontSize = 18.sp,
+                            fontWeight = FontWeight.SemiBold,
+                            fontStyle = FontStyle.Italic
+                        )
+                    },
+                    text = {
+                        Text(text = taskItem.taskName, fontSize = 14.sp)
+                    })
+            }
+
+            //Muestra el diálogo que te permite editar una tarea
             if (showEditDialog) {
                 Dialog(
                     onDismissRequest = {},
@@ -231,6 +267,8 @@ fun TaskItem(
                 }
 
             }
+
+            // Muestra el diálogo para eliminar una tarea
 
             if (showDeleteDialog) {
                 DeleteDialog(
@@ -260,9 +298,9 @@ fun MyFabAddButton(showMenuCreate: () -> Unit) {
     }
 }
 
+
 @Composable
 fun DropDownMenuTask(openDialog: () -> Unit, openEdit: () -> Unit) {
-
     var expanded by remember {
         mutableStateOf(false)
     }
@@ -311,6 +349,7 @@ fun DropDownMenuTask(openDialog: () -> Unit, openEdit: () -> Unit) {
     }
 }
 
+// Diálogo realizado la creacion de nuevas tareas
 @Composable
 fun DialogCreateTask(
     title: String,
@@ -392,6 +431,8 @@ fun DialogCreateTask(
         }
     }
 }
+
+// Diálogo creado para la eliminación de tareas
 
 @Composable
 fun DeleteDialog(closeDialog: () -> Unit, deleteTask: () -> Unit) {
