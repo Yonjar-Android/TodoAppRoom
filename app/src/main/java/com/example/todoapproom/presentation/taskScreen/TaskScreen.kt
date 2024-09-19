@@ -101,7 +101,8 @@ fun TaskScreen(viewModel: TaskViewModel) {
                 TaskItem(taskItem = it, viewModel = viewModel) { bool ->
                     viewModel.editTask(
                         taskModel = it.copy(
-                            isCompleted = bool
+                            isCompleted = bool,
+                            completedDate = System.currentTimeMillis()
                         )
                     )
                 }
@@ -125,12 +126,14 @@ fun TaskScreen(viewModel: TaskViewModel) {
                     showMenuCreate = false
                 },
                 actionFunc = {
+                    val currentTimeInMillis: Long = System.currentTimeMillis()
                     viewModel.createTask(
                         TaskModel(
                             taskId = 0,
                             taskName = it,
-                            creationDate = 0,
-                            isCompleted = false
+                            creationDate = currentTimeInMillis,
+                            isCompleted = false,
+                            completedDate = null
                         )
                     )
                 }

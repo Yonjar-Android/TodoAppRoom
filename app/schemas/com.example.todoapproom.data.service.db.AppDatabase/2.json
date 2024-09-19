@@ -1,0 +1,58 @@
+{
+  "formatVersion": 1,
+  "database": {
+    "version": 2,
+    "identityHash": "58839974c816d1b7c802f0bd72296a72",
+    "entities": [
+      {
+        "tableName": "task_table",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`tId` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `task_name` TEXT, `task_date` INTEGER, `task_completed` INTEGER, `date_completed` INTEGER)",
+        "fields": [
+          {
+            "fieldPath": "tId",
+            "columnName": "tId",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "task",
+            "columnName": "task_name",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "creationDate",
+            "columnName": "task_date",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "isCompleted",
+            "columnName": "task_completed",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "dateCompleted",
+            "columnName": "date_completed",
+            "affinity": "INTEGER",
+            "notNull": false
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "tId"
+          ]
+        },
+        "indices": [],
+        "foreignKeys": []
+      }
+    ],
+    "views": [],
+    "setupQueries": [
+      "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '58839974c816d1b7c802f0bd72296a72')"
+    ]
+  }
+}

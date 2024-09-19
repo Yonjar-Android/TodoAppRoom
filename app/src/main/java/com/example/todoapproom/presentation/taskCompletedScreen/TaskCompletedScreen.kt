@@ -91,7 +91,8 @@ fun TaskCompletedScreen(viewModel: TasksCompletedViewModel) {
                 TaskCompletedItem(task = taskItem, onCheckedChangeValue = {
                     viewModel.updateTask(
                         taskModel = taskItem.copy(
-                            isCompleted = it
+                            isCompleted = it,
+                            completedDate = null
                         )
                     )
                 })

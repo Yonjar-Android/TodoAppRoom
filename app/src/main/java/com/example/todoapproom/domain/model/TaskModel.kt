@@ -4,5 +4,6 @@ data class TaskModel(
     val taskId: Int,
     val taskName: String,
     var isCompleted:Boolean,
-    val creationDate: Long
+    val creationDate: Long,
+    val completedDate: Long?
 )

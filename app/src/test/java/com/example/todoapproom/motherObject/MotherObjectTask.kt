@@ -12,14 +12,16 @@ object MotherObjectTask {
         taskId = 1,
         creationDate = 1000L,
         taskName = "Programar Python",
-        isCompleted = false
+        isCompleted = false,
+        completedDate = 0L
     )
 
     val task2 = TaskModel(
         taskId = 2,
         creationDate = 3000L,
         taskName = "Programar SQL",
-        isCompleted = true
+        isCompleted = true,
+        completedDate = 0L
     )
 
     val taskList = listOf(task, task2)

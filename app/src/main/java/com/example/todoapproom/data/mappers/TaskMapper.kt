@@ -11,7 +11,8 @@ object TaskMapper {
             taskId = taskRoomModel.tId,
             taskName = taskRoomModel.task ?: "",
             isCompleted = taskRoomModel.isCompleted ?: false,
-            creationDate = taskRoomModel.creationDate ?: 0L
+            creationDate = taskRoomModel.creationDate ?: 0L,
+            completedDate = taskRoomModel.dateCompleted ?: 0L
         )
     }
 
@@ -20,7 +21,8 @@ object TaskMapper {
             tId = taskModel.taskId,
             task = taskModel.taskName,
             isCompleted = taskModel.isCompleted,
-            creationDate = taskModel.creationDate
+            creationDate = taskModel.creationDate,
+            dateCompleted = taskModel.completedDate
         )
     }
 }
