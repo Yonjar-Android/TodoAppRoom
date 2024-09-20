@@ -1,15 +1,19 @@
 package com.example.todoapproom.data.repositories
 
+import com.example.todoapproom.R
 import com.example.todoapproom.data.mappers.TaskMapper
 import com.example.todoapproom.data.service.dao.TaskDao
 import com.example.todoapproom.domain.model.TaskModel
 import com.example.todoapproom.domain.repositories.IRepositoryCRUD
+import com.example.todoapproom.utils.ResourceProvider
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
-class RepositoryCRUDImp @Inject constructor(private val taskDao: TaskDao) : IRepositoryCRUD {
+class RepositoryCRUDImp @Inject constructor(
+    private val taskDao: TaskDao,
+    private val resourceProvider: ResourceProvider) : IRepositoryCRUD {
     override fun getTasks(): Flow<List<TaskModel>> {
         return try {
             taskDao.getAll().map { taskRoom ->
@@ -37,7 +41,7 @@ class RepositoryCRUDImp @Inject constructor(private val taskDao: TaskDao) : IRep
     override suspend fun createTask(taskModel: TaskModel): String {
         return try {
             taskDao.insertTask(TaskMapper.toRoomModel(taskModel))
-            "Tarea creada exitosamente"
+            resourceProvider.getString(R.string.task_created_success)
         } catch (e: Exception) {
             "Error: ${e.message}"
         }
@@ -48,7 +52,7 @@ class RepositoryCRUDImp @Inject constructor(private val taskDao: TaskDao) : IRep
             taskDao.updateTask(
                 TaskMapper.toRoomModel(taskModel)
             )
-            "Tarea actualizada exitosamente"
+            resourceProvider.getString(R.string.task_updated_success)
         } catch (e: Exception) {
             "Error: ${e.message}"
         }
@@ -60,7 +64,7 @@ class RepositoryCRUDImp @Inject constructor(private val taskDao: TaskDao) : IRep
             taskDao.deleteTask(
                 TaskMapper.toRoomModel(taskModel)
             )
-            "Tarea eliminada exitosamente"
+            resourceProvider.getString(R.string.task_deleted_success)
         } catch (e: Exception) {
             "Error: ${e.message}"
         }

@@ -4,9 +4,11 @@ import app.cash.turbine.test
 import com.example.todoapproom.data.mappers.TaskMapper
 import com.example.todoapproom.data.service.dao.TaskDao
 import com.example.todoapproom.motherObject.MotherObjectTask
+import com.example.todoapproom.utils.ResourceProvider
 import io.mockk.MockKAnnotations
 import io.mockk.coEvery
 import io.mockk.coVerify
+import io.mockk.every
 import io.mockk.impl.annotations.MockK
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.runTest
@@ -20,6 +22,9 @@ class RepositoryCRUDImpTest{
     @MockK
     private lateinit var taskDao: TaskDao
 
+    @MockK
+    private lateinit var resourceProvider: ResourceProvider
+
     private lateinit var repositoryCRUDImp: RepositoryCRUDImp
 
     private val taskModel = MotherObjectTask.task
@@ -32,7 +37,11 @@ class RepositoryCRUDImpTest{
     @Before
     fun setUp(){
         MockKAnnotations.init(this)
-        repositoryCRUDImp = RepositoryCRUDImp(taskDao)
+        repositoryCRUDImp = RepositoryCRUDImp(taskDao,resourceProvider)
+
+        every { resourceProvider.getString(2131492959) } returns "Tarea creada exitosamente"
+        every { resourceProvider.getString(2131492961) } returns "Tarea actualizada exitosamente"
+        every { resourceProvider.getString(2131492960) } returns "Tarea eliminada exitosamente"
     }
 
     @Test

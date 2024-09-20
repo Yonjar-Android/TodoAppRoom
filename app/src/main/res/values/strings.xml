@@ -15,4 +15,8 @@
     <string name="strCancel">Cancel</string>
 
     <string name="strLast7Days">Tasks completed in the last 7 days</string>
+
+    <string name="task_created_success">Task created successfully</string>
+    <string name="task_updated_success">Task updated successfully</string>
+    <string name="task_deleted_success">Task deleted successfully</string>
 </resources>

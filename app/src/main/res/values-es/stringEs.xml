@@ -16,4 +16,8 @@
     <string name="strCancel">Cancelar</string>
 
     <string name="strLast7Days">Tareas eliminadas en los últimos 7 días</string>
+
+    <string name="task_created_success">Tarea creada exitosamente</string>
+    <string name="task_updated_success">Tarea actualizada exitosamente</string>
+    <string name="task_deleted_success">Tarea eliminada exitosamente</string>
 </resources>
