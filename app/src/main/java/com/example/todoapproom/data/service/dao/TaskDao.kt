@@ -13,7 +13,11 @@ interface TaskDao {
     @Query("Select * FROM task_table where task_completed == 0")
     fun getAll(): Flow<List<TaskRoomModel>>
 
-    @Query("SELECT * FROM task_table where task_completed == 1")
+    @Query("""
+        SELECT * FROM task_table 
+        WHERE task_completed = 1 
+        AND date_completed >= strftime('%s', 'now', '-1 day') * 1000
+    """)
     fun getTaskCompleted(): Flow<List<TaskRoomModel>>
 
     @Insert
