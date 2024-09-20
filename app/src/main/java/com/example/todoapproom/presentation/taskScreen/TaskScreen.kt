@@ -1,5 +1,7 @@
 package com.example.todoapproom.presentation.taskScreen
 
+import android.content.Context
+import android.media.MediaPlayer
 import android.widget.Toast
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
@@ -40,6 +42,7 @@ import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -59,9 +62,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
+import com.example.todoapproom.R
 import com.example.todoapproom.domain.model.TaskModel
 import com.example.todoapproom.ui.theme.bgColor
 import com.example.todoapproom.ui.theme.buttonColor
+import com.example.todoapproom.utils.SoundPlayer
 
 @Composable
 fun TaskScreen(viewModel: TaskViewModel) {
@@ -98,7 +103,7 @@ fun TaskScreen(viewModel: TaskViewModel) {
 
         LazyColumn(modifier = Modifier.weight(4f)) {
             items(tasks, key = { it.taskId }) {
-                TaskItem(taskItem = it, viewModel = viewModel) { bool ->
+                TaskItem(taskItem = it, context = context, viewModel = viewModel) { bool ->
                     viewModel.editTask(
                         taskModel = it.copy(
                             isCompleted = bool,
@@ -152,6 +157,7 @@ fun TaskScreen(viewModel: TaskViewModel) {
 fun TaskItem(
     taskItem: TaskModel,
     viewModel: TaskViewModel,
+    context: Context,
     onCheckedChangeValue: (Boolean) -> Unit
 ) {
     var isCompleted by rememberSaveable {
@@ -184,6 +190,9 @@ fun TaskItem(
                 checked = isCompleted, onCheckedChange = {
                     isCompleted = !isCompleted
                     onCheckedChangeValue(isCompleted)
+
+                    // Reproducción de sonido al completar una tarea
+                    SoundPlayer.playSound(context)
                 },
                 modifier = Modifier
                     .clip(CircleShape)
