@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">TodoAppRoom</string>
+
+    <string name="strAddTask">Añadir tarea</string>
+    <string name="strAdd">Añadir</string>
+    <string name="strTask">Tarea</string>
+
+    <string name="strEditTask">Editar tarea</string>
+    <string name="strEdit">Editar</string>
+    <string name="strUpdate">Actualizar</string>
+
+    <string name="strDelete">Eliminar</string>
+    <string name="strDeleteTask">Eliminar tarea</string>
+    <string name="strWouldYouDeleteTask">¿Deseas eliminar la tarea?</string>
+    <string name="strCancel">Cancelar</string>
+
+    <string name="strLast7Days">Tareas eliminadas en los últimos 7 días</string>
+</resources>

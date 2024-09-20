@@ -35,6 +35,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -42,6 +43,7 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.todoapproom.R
 import com.example.todoapproom.domain.model.TaskModel
 import com.example.todoapproom.ui.theme.bgColor
 
@@ -77,7 +79,7 @@ fun TaskCompletedScreen(viewModel: TasksCompletedViewModel) {
         Spacer(modifier = Modifier.size(15.dp))
 
         Text(
-            text = "Tasks completed in the last 7 days",
+            text = stringResource(id = R.string.strLast7Days),
             fontSize = 24.sp,
             fontWeight = FontWeight.SemiBold,
             fontStyle = FontStyle.Italic,
@@ -178,7 +180,7 @@ fun TaskCompletedItem(task: TaskModel, onCheckedChangeValue: (Boolean) -> Unit) 
             },
                 title = {
                     Text(
-                        text = "Tarea",
+                        text = stringResource(id = R.string.strTask),
                         fontSize = 18.sp,
                         fontWeight = FontWeight.SemiBold,
                         fontStyle = FontStyle.Italic

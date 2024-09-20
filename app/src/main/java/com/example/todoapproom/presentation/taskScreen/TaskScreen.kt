@@ -53,6 +53,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -61,6 +62,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
+import com.example.todoapproom.R
 import com.example.todoapproom.domain.model.TaskModel
 import com.example.todoapproom.ui.theme.bgColor
 import com.example.todoapproom.ui.theme.buttonColor
@@ -123,9 +125,9 @@ fun TaskScreen(viewModel: TaskViewModel) {
             properties = DialogProperties(usePlatformDefaultWidth = false)
         ) {
             DialogCreateTask(
-                title = "Crear tarea",
+                title = stringResource(id = R.string.strAddTask),
                 textFieldValue = "",
-                buttonText = "Crear",
+                buttonText = stringResource(id = R.string.strAdd),
                 closeDialog = {
                     showMenuCreate = false
                 },
@@ -243,7 +245,7 @@ fun TaskItem(
                 },
                     title = {
                         Text(
-                            text = "Tarea",
+                            text = stringResource(id = R.string.strTask),
                             fontSize = 18.sp,
                             fontWeight = FontWeight.SemiBold,
                             fontStyle = FontStyle.Italic
@@ -261,8 +263,8 @@ fun TaskItem(
                     properties = DialogProperties(usePlatformDefaultWidth = false)
                 ) {
                     DialogCreateTask(
-                        title = "Editar tarea",
-                        buttonText = "Actualizar",
+                        title = stringResource(id = R.string.strEditTask),
+                        buttonText = stringResource(id = R.string.strUpdate),
                         textFieldValue = taskItem.taskName,
                         closeDialog = {
                             showEditDialog = false
@@ -334,7 +336,7 @@ fun DropDownMenuTask(openDialog: () -> Unit, openEdit: () -> Unit) {
         ) {
             DropdownMenuItem(text = {
                 Text(
-                    text = "Editar",
+                    text = stringResource(id = R.string.strEdit),
                     fontSize = 14.sp,
                     textAlign = TextAlign.Center,
                     fontWeight = FontWeight.Normal
@@ -347,7 +349,7 @@ fun DropDownMenuTask(openDialog: () -> Unit, openEdit: () -> Unit) {
 
             DropdownMenuItem(text = {
                 Text(
-                    text = "Eliminar",
+                    text = stringResource(id = R.string.strDelete),
                     fontSize = 14.sp,
                     textAlign = TextAlign.Center,
                     fontWeight = FontWeight.Normal
@@ -452,25 +454,25 @@ fun DeleteDialog(closeDialog: () -> Unit, deleteTask: () -> Unit) {
                 deleteTask()
                 closeDialog()
             }) {
-                Text(text = "Eliminar", fontSize = 14.sp, fontWeight = FontWeight.SemiBold)
+                Text(text = stringResource(id = R.string.strDelete), fontSize = 14.sp, fontWeight = FontWeight.SemiBold)
             }
         }, dismissButton = {
             TextButton(onClick = {
                 closeDialog()
             }) {
-                Text(text = "Cancelar", fontSize = 14.sp, fontWeight = FontWeight.SemiBold)
+                Text(text = stringResource(id = R.string.strCancel), fontSize = 14.sp, fontWeight = FontWeight.SemiBold)
             }
         },
         title = {
             Text(
-                text = "Eliminar tarea",
+                text = stringResource(id = R.string.strDeleteTask),
                 fontSize = 24.sp,
                 fontWeight = FontWeight.Bold,
                 fontStyle = FontStyle.Italic
             )
         },
         text = {
-            Text(text = "¿Deseas eliminar la tarea?", fontSize = 18.sp)
+            Text(text = stringResource(id = R.string.strWouldYouDeleteTask), fontSize = 18.sp)
         })
 }
 

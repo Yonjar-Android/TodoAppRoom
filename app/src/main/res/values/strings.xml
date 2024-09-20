@@ -1,3 +1,18 @@
 <resources>
     <string name="app_name">TodoAppRoom</string>
+
+    <string name="strAddTask">Add Task</string>
+    <string name="strAdd">Add</string>
+    <string name="strTask">Task</string>
+
+    <string name="strEditTask">Edit Task</string>
+    <string name="strEdit">Edit</string>
+    <string name="strUpdate">Update</string>
+
+    <string name="strDelete">Delete</string>
+    <string name="strDeleteTask">Delete Task</string>
+    <string name="strWouldYouDeleteTask">Would you like to delete this task?</string>
+    <string name="strCancel">Cancel</string>
+
+    <string name="strLast7Days">Tasks completed in the last 7 days</string>
 </resources>
