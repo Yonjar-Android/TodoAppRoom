@@ -52,7 +52,7 @@ class TasksCompletedViewModelTest{
     }
 
     @Test
-    fun `updateTask should update state with success message when task is updated successfully`() = runTest {
+    fun `updateTask should update state to loading and then finish loading`() = runTest {
 
         //  Given
         coEvery { repositoryCRUDImp.updateTask(taskModel = MotherObjectTask.task) } returns MotherObjectTask.message
@@ -69,14 +69,7 @@ class TasksCompletedViewModelTest{
             advanceUntilIdle()
 
             // Verificamos el estado final
-            assertTrue(awaitItem().message == MotherObjectTask.message)
-
-            // Simulamos que el Toast fue mostrado y llamamos a resetMessages
-            viewModel.resetMessages()
-
-            val resetState = awaitItem()
-            assertNull(resetState.message) // Verificamos que el mensaje fue reseteado
-            assertFalse(resetState.isLoading) // Verificamos que isLoading fue reseteado
+            assertFalse(awaitItem().isLoading)
         }
     }
 

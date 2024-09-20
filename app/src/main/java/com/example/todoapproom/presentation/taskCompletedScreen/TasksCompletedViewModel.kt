@@ -36,11 +36,10 @@ class TasksCompletedViewModel @Inject constructor
 
         viewModelScope.launch {
             try {
-                val response = repositoryCRUDImp.updateTask(taskModel)
+                repositoryCRUDImp.updateTask(taskModel)
 
-                if (response.isNotBlank()){
-                    _state.update { _state.value.copy(message = response) }
-                }
+                resetMessages()
+
             } catch (e:Exception){
                 _state.update { _state.value.copy(message = e.message) }
             }

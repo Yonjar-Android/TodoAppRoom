@@ -140,6 +140,30 @@ class TaskViewModelTest{
     }
 
     @Test
+    fun `editTask - should not update state with success message when task is updated successfully and isCompleted is true`() = runTest {
+        //  Given
+        val taskModel = MotherObjectTask.task.copy(isCompleted = true)
+        coEvery { repositoryCRUDImp.updateTask(taskModel) } returns MotherObjectTask.message
+
+        // When
+        viewModel.editTask(taskModel)
+
+        // Then
+        viewModel.state.test {
+            // Verificamos que el primer estado es de carga
+            assertTrue(awaitItem().isLoading)
+
+            // Avanzamos hasta que todas las coroutines se completen
+            advanceUntilIdle()
+
+            // Verificamos el estado final
+            val finalState = awaitItem()
+            assertNull(finalState.message) // Verificamos que el mensaje no es visible
+            assertFalse(finalState.isLoading) // Verificamos que isLoading fue reseteado
+        }
+    }
+
+    @Test
     fun `editTask - should update state with error message when an exception occurs during task update`() = runTest {
 
         //  Given

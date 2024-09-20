@@ -63,8 +63,12 @@ class TaskViewModel @Inject constructor(
             try {
                val response = repositoryCRUDImp.updateTask(taskModel)
 
-                _state.update {
-                    _state.value.copy(message = response)
+                if (!taskModel.isCompleted){
+                    _state.update {
+                        _state.value.copy(message = response)
+                    }
+                } else{
+                    resetMessages()
                 }
             } catch (e: Exception) {
                 _state.update {
