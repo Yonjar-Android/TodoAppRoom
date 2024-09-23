@@ -102,12 +102,18 @@ dependencies {
     annotationProcessor(libs.androidx.room.compiler)
     implementation(libs.androidx.room.ktx)
 
+    implementation(libs.androidx.room.paging)
+
     // To use Kotlin Symbol Processing (KSP)
     ksp(libs.androidx.room.compiler)
 
     //Dagger Hilt
     implementation(libs.hilt.android)
     kapt(libs.hilt.android.compiler)
+
+    implementation(libs.androidx.paging.runtime.ktx)
+
+    implementation(libs.androidx.paging.compose)
 }
 
 kapt {
