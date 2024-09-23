@@ -36,15 +36,17 @@ class RepositoryCRUDImp @Inject constructor(
             }
     }
 
-    override fun getTasksCompleted(): Flow<List<TaskModel>> {
-        return try {
-            taskDao.getTaskCompleted().map { taskRoom ->
-                taskRoom.map { taskRoomModel ->
-                    TaskMapper.fromRoomModel(taskRoomModel)
-                }
+    override fun getTasksCompleted(): Flow<PagingData<TaskModel>> {
+        return Pager(
+            PagingConfig(
+                pageSize = 25,
+                prefetchDistance = 10
+            ),
+            pagingSourceFactory = {taskDao.getTaskCompleted()}
+        ).flow.map { value: PagingData<TaskRoomModel> ->
+            value.map {
+                TaskMapper.fromRoomModel(it)
             }
-        } catch (e: Exception) {
-            flowOf(listOf())
         }
     }
 

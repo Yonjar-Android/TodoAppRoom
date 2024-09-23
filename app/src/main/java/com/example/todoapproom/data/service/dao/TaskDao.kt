@@ -21,7 +21,7 @@ interface TaskDao {
     AND date_completed >= strftime('%s', 'now', '-7 days') * 1000
     """
     )
-    fun getTaskCompleted(): Flow<List<TaskRoomModel>>
+    fun getTaskCompleted(): PagingSource<Int,TaskRoomModel>
 
     @Insert
     suspend fun insertTask(task: TaskRoomModel)

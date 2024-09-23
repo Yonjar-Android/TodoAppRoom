@@ -114,7 +114,7 @@ fun TaskScreen(viewModel: TaskViewModel) {
             ) {
                 val task = tasks[it]
 
-                if (task != null) {
+                task?.let {
                     TaskItem(taskItem = task, context = context, viewModel = viewModel) { bool ->
                         viewModel.editTask(
                             taskModel = task.copy(
@@ -123,9 +123,8 @@ fun TaskScreen(viewModel: TaskViewModel) {
                             )
                         )
                     }
-
-
                 }
+
                 EditSpacer()
             }
         }

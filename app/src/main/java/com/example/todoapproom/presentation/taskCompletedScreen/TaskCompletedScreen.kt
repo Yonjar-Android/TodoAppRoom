@@ -43,6 +43,9 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.paging.compose.collectAsLazyPagingItems
+import androidx.paging.compose.itemContentType
+import androidx.paging.compose.itemKey
 import com.example.todoapproom.R
 import com.example.todoapproom.domain.model.TaskModel
 import com.example.todoapproom.ui.theme.bgColor
@@ -50,7 +53,7 @@ import com.example.todoapproom.ui.theme.bgColor
 @Composable
 fun TaskCompletedScreen(viewModel: TasksCompletedViewModel) {
 
-    val tasks by viewModel.taskList.collectAsState()
+    val tasks = viewModel.taskList.collectAsLazyPagingItems()
 
     val state by viewModel.state.collectAsState()
 
@@ -89,17 +92,25 @@ fun TaskCompletedScreen(viewModel: TasksCompletedViewModel) {
         Spacer(modifier = Modifier.size(8.dp))
 
         LazyColumn(modifier = Modifier.weight(1f)) {
-            items(tasks) { taskItem ->
-                TaskCompletedItem(task = taskItem, onCheckedChangeValue = {
-                    viewModel.updateTask(
-                        taskModel = taskItem.copy(
-                            isCompleted = it,
-                            completedDate = null
-                        )
-                    )
-                })
 
-                Spacer(modifier = Modifier.size(24.dp))
+            items(
+                count = tasks.itemCount,
+                key = tasks.itemKey { it.taskId },
+                contentType = tasks.itemContentType{ "Tasks" }
+            ){ index ->
+                val task = tasks[index]
+                task?.let {
+                    TaskCompletedItem(task = task, onCheckedChangeValue = {
+                        viewModel.updateTask(
+                            taskModel = task.copy(
+                                isCompleted = it,
+                                completedDate = null
+                            )
+                        )
+                    })
+
+                    Spacer(modifier = Modifier.size(24.dp))
+                }
             }
         }
     }
