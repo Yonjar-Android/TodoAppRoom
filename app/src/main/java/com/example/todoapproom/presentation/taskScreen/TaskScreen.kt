@@ -62,6 +62,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
+import androidx.paging.compose.collectAsLazyPagingItems
+import androidx.paging.compose.itemContentType
+import androidx.paging.compose.itemKey
 import com.example.todoapproom.R
 import com.example.todoapproom.domain.model.TaskModel
 import com.example.todoapproom.ui.theme.bgColor
@@ -73,7 +76,7 @@ fun TaskScreen(viewModel: TaskViewModel) {
 
     val context = LocalContext.current
 
-    val tasks by viewModel.taskList.collectAsState()
+    val tasks = viewModel.taskList.collectAsLazyPagingItems()
     val state by viewModel.state.collectAsState()
 
     var showMenuCreate by rememberSaveable {
@@ -103,14 +106,25 @@ fun TaskScreen(viewModel: TaskViewModel) {
         EditSpacer()
 
         LazyColumn(modifier = Modifier.weight(4f)) {
-            items(tasks, key = { it.taskId }) {
-                TaskItem(taskItem = it, context = context, viewModel = viewModel) { bool ->
-                    viewModel.editTask(
-                        taskModel = it.copy(
-                            isCompleted = bool,
-                            completedDate = System.currentTimeMillis()
+
+            items(
+                count = tasks.itemCount,
+                key = tasks.itemKey { it.taskId },
+                contentType = tasks.itemContentType { "Tasks" }
+            ) {
+                val task = tasks[it]
+
+                if (task != null) {
+                    TaskItem(taskItem = task, context = context, viewModel = viewModel) { bool ->
+                        viewModel.editTask(
+                            taskModel = task.copy(
+                                isCompleted = bool,
+                                completedDate = System.currentTimeMillis()
+                            )
                         )
-                    )
+                    }
+
+
                 }
                 EditSpacer()
             }
@@ -454,13 +468,21 @@ fun DeleteDialog(closeDialog: () -> Unit, deleteTask: () -> Unit) {
                 deleteTask()
                 closeDialog()
             }) {
-                Text(text = stringResource(id = R.string.strDelete), fontSize = 14.sp, fontWeight = FontWeight.SemiBold)
+                Text(
+                    text = stringResource(id = R.string.strDelete),
+                    fontSize = 14.sp,
+                    fontWeight = FontWeight.SemiBold
+                )
             }
         }, dismissButton = {
             TextButton(onClick = {
                 closeDialog()
             }) {
-                Text(text = stringResource(id = R.string.strCancel), fontSize = 14.sp, fontWeight = FontWeight.SemiBold)
+                Text(
+                    text = stringResource(id = R.string.strCancel),
+                    fontSize = 14.sp,
+                    fontWeight = FontWeight.SemiBold
+                )
             }
         },
         title = {

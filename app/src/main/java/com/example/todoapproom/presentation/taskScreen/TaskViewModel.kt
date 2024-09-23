@@ -2,9 +2,12 @@ package com.example.todoapproom.presentation.taskScreen
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.paging.PagingData
+import androidx.paging.cachedIn
 import com.example.todoapproom.data.repositories.RepositoryCRUDImp
 import com.example.todoapproom.domain.model.TaskModel
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -22,12 +25,8 @@ class TaskViewModel @Inject constructor(
     /* Estado de tareas que recibe un flow directo desde la base de datos
       por lo que si hay un cambio en la base de datos se actualizará automáticamente*/
 
-    val taskList: StateFlow<List<TaskModel>> = repositoryCRUDImp.getTasks()
-        .stateIn(
-            viewModelScope,
-            SharingStarted.WhileSubscribed(5000),
-            emptyList() // Valor inicial vacío
-        )
+    val taskList: Flow<PagingData<TaskModel>> = repositoryCRUDImp.getTasks()
+        .cachedIn(viewModelScope)
 
     private val _state = MutableStateFlow(TaskScreenState())
     val state: StateFlow<TaskScreenState> = _state
