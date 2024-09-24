@@ -20,6 +20,7 @@ import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.CheckboxDefaults
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -135,7 +136,7 @@ fun TaskCompletedItem(task: TaskModel, onCheckedChangeValue: (Boolean) -> Unit) 
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .background(bgColor)
+            .background(MaterialTheme.colorScheme.onPrimary)
             .padding(10.dp)
             .clickable {
                 showFullTask = true

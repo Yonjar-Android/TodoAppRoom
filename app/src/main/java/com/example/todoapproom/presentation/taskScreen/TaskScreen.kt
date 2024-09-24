@@ -36,6 +36,7 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonDefaults
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
@@ -193,7 +194,7 @@ fun TaskItem(
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .background(bgColor)
+                .background(MaterialTheme.colorScheme.onPrimary)
                 .padding(10.dp),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween
@@ -316,7 +317,7 @@ fun MyFabAddButton(showMenuCreate: () -> Unit) {
             showMenuCreate()
         },
         modifier = Modifier.size(65.dp),
-        colors = IconButtonDefaults.iconButtonColors(containerColor = buttonColor)
+        colors = IconButtonDefaults.iconButtonColors(containerColor = MaterialTheme.colorScheme.onSecondary)
     ) {
         Icon(imageVector = Icons.Filled.Add, contentDescription = "Button to add a task")
     }
@@ -397,7 +398,7 @@ fun DialogCreateTask(
             verticalArrangement = Arrangement.SpaceBetween,
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier
-                .background(bgColor)
+                .background(MaterialTheme.colorScheme.onPrimary)
                 .padding(vertical = 20.dp)
         ) {
             Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.End) {
@@ -440,7 +441,7 @@ fun DialogCreateTask(
                     actionFunc(textValue)
                     closeDialog()
                 },
-                colors = ButtonDefaults.buttonColors(containerColor = buttonColor),
+                colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.onSecondary),
             ) {
                 Text(
                     text = buttonText,
@@ -449,7 +450,7 @@ fun DialogCreateTask(
                     fontWeight = FontWeight.Bold,
                     textAlign = TextAlign.Center,
                     modifier = Modifier.fillMaxWidth(),
-                    color = Color.Black
+                    color = MaterialTheme.colorScheme.onSurface
                 )
             }
         }
