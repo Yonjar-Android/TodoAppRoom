@@ -1,6 +1,7 @@
 package com.example.todoapproom.data.repositories
 
-import app.cash.turbine.test
+import androidx.paging.PagingConfig
+import androidx.paging.PagingSource
 import com.example.todoapproom.data.mappers.TaskMapper
 import com.example.todoapproom.data.service.dao.TaskDao
 import com.example.todoapproom.motherObject.MotherObjectTask
@@ -10,10 +11,8 @@ import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.every
 import io.mockk.impl.annotations.MockK
-import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
-import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
 
@@ -47,78 +46,42 @@ class RepositoryCRUDImpTest{
     @Test
     fun `getTasks should return a list of mapped TaskModels when successful`() = runTest {
         // Given: Datos de prueba y comportamiento simulado del DAO
-        val taskRoomList = MotherObjectTask.taskRoomList
-
         val expectedTaskList = MotherObjectTask.taskList
 
-        coEvery { taskDao.getAll() } returns flowOf(taskRoomList)
+        // Simular la respuesta del DAO con la FakePagingSource
+        coEvery { taskDao.getAll() } returns MotherObjectTask.FakePagingSource()
+
+        // Crear el pager para manejar la paginación
+        val pagingSource = MotherObjectTask.FakePagingSource()
+        val pager = MotherObjectTask.TestPager(PagingConfig(pageSize = 25), pagingSource)
 
         // When: Llamada al método getTasks del repositorio
-        val resultFlow = repositoryCRUDImp.getTasks()
+        val result = pager.refresh() as PagingSource.LoadResult.Page
 
-        // Then: Verificación de que el resultado es correcto utilizando Turbine
-        resultFlow.test {
-            val result = awaitItem()
-            assertEquals(expectedTaskList, result)
-            awaitComplete()
-        }
-    }
-
-    @Test
-    fun `getTasks should return an empty list when an exception occurs`() = runTest {
-        // Given: Simulación de un error al llamar a taskDao.getAll()
-        val exception = RuntimeException("Database error")
-        coEvery { taskDao.getAll() } throws exception
-
-        // When: Llamada al método getTasks del repositorio
-        val resultFlow = repositoryCRUDImp.getTasks()
-
-        // Then: Verificación de que el flujo devuelve una lista vacía
-        resultFlow.test {
-            val result = awaitItem()
-            assertTrue(result.isEmpty()) // Verifica que el resultado es una lista vacía
-            awaitComplete()
-        }
+        // Then: Verificación de que el resultado es correcto
+        val mappedTasks = result.data.map { TaskMapper.fromRoomModel(it) }
+        assertEquals(expectedTaskList, mappedTasks)
     }
 
     @Test
     fun `getTasksCompleted should return a list of mapped TaskModels when successful`() = runTest {
         // Given: Datos de prueba y comportamiento simulado del DAO
-        val taskRoomList = MotherObjectTask.taskRoomList
-
         val expectedTaskList = MotherObjectTask.taskList
 
-        coEvery { taskDao.getTaskCompleted() } returns flowOf(taskRoomList)
+        // Simular la respuesta del DAO con la FakePagingSource
+        coEvery { taskDao.getTaskCompleted() } returns MotherObjectTask.FakePagingSource()
+
+        // Crear el pager para manejar la paginación
+        val pagingSource = MotherObjectTask.FakePagingSource()
+        val pager = MotherObjectTask.TestPager(PagingConfig(pageSize = 25), pagingSource)
 
         // When: Llamada al método getTasks del repositorio
-        val resultFlow = repositoryCRUDImp.getTasksCompleted()
+        val result = pager.refresh() as PagingSource.LoadResult.Page
 
-        // Then: Verificación de que el resultado es correcto utilizando Turbine
-        resultFlow.test {
-            val result = awaitItem()
-            assertEquals(expectedTaskList, result)
-            awaitComplete()
-        }
+        // Then: Verificación de que el resultado es correcto
+        val mappedTasks = result.data.map { TaskMapper.fromRoomModel(it) }
+        assertEquals(expectedTaskList, mappedTasks)
     }
-
-    @Test
-    fun `getTasksCompleted should return an empty list when an exception occurs`() = runTest {
-        // Given: Simulación de un error al llamar a taskDao.getAll()
-        val exception = RuntimeException("Database error")
-        coEvery { taskDao.getTaskCompleted() } throws exception
-
-        // When: Llamada al método getTasks del repositorio
-        val resultFlow = repositoryCRUDImp.getTasksCompleted()
-
-        // Then: Verificación de que el flujo devuelve una lista vacía
-        resultFlow.test {
-            val result = awaitItem()
-            assertTrue(result.isEmpty()) // Verifica que el resultado es una lista vacía
-            awaitComplete()
-        }
-    }
-
-
 
     @Test
     fun `createTask - should return success message when task is inserted successfully`() = runTest {

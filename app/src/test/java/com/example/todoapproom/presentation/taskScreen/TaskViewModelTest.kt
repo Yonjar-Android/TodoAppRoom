@@ -1,5 +1,6 @@
 package com.example.todoapproom.presentation.taskScreen
 
+import androidx.paging.PagingData
 import app.cash.turbine.test
 import com.example.todoapproom.data.repositories.RepositoryCRUDImp
 import com.example.todoapproom.motherObject.MotherObjectTask
@@ -40,7 +41,7 @@ class TaskViewModelTest{
         Dispatchers.setMain(dispatcher)
 
         // Simulamos el comportamiento de getTasks
-        every { repositoryCRUDImp.getTasks() } returns flowOf(emptyList())
+        every { repositoryCRUDImp.getTasks() } returns flowOf(PagingData.from(emptyList()))
 
         viewModel = TaskViewModel(repositoryCRUDImp)
 

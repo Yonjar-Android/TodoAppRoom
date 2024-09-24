@@ -1,5 +1,6 @@
 package com.example.todoapproom.presentation.taskCompletedScreen
 
+import androidx.paging.PagingData
 import app.cash.turbine.test
 import com.example.todoapproom.data.repositories.RepositoryCRUDImp
 import com.example.todoapproom.motherObject.MotherObjectTask
@@ -40,7 +41,7 @@ class TasksCompletedViewModelTest{
         Dispatchers.setMain(dispatcher)
 
         // Simulamos el comportamiento de getTasks
-        every { repositoryCRUDImp.getTasksCompleted() } returns flowOf(emptyList())
+        every { repositoryCRUDImp.getTasksCompleted() } returns flowOf(PagingData.from(emptyList()))
 
         viewModel = TasksCompletedViewModel(repositoryCRUDImp)
     }
