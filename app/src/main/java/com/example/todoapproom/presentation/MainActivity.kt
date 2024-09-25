@@ -6,6 +6,7 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.annotation.DrawableRes
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
@@ -13,6 +14,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBars
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
@@ -23,9 +25,12 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
+import androidx.core.view.WindowCompat
+import androidx.core.view.WindowInsetsControllerCompat
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -39,6 +44,7 @@ import com.example.todoapproom.presentation.taskScreen.TaskViewModel
 import com.example.todoapproom.ui.theme.TodoAppRoomTheme
 import dagger.hilt.android.AndroidEntryPoint
 
+
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -46,6 +52,31 @@ class MainActivity : ComponentActivity() {
         installSplashScreen()
         enableEdgeToEdge()
         setContent {
+
+            // Implementación del cambio de color de la barra de estado por si el dispositivo
+            // está en modo claro u oscuro
+
+            val useDarkIcons = !isSystemInDarkTheme() // Invertir el color de los íconos respecto al tema
+            val statusBarColor = if (isSystemInDarkTheme()) {
+                Color.Black
+            } else {
+                Color.White
+            }
+
+            window.apply {
+                // Usar decorView para trabajar con WindowInsetsController
+                WindowCompat.setDecorFitsSystemWindows(this, false)
+
+                // Controlador para los insets de la ventana
+                val controller = WindowInsetsControllerCompat(this, decorView)
+
+                // Establecer si los íconos de la barra de estado deben ser oscuros o claros
+                controller.isAppearanceLightStatusBars = useDarkIcons
+
+                // Establecer el color de fondo de la barra de estado
+                decorView.setBackgroundColor(statusBarColor.toArgb())
+            }
+
 
             val taskViewModel: TaskViewModel by viewModels()
 
@@ -58,7 +89,7 @@ class MainActivity : ComponentActivity() {
 
                 Scaffold(modifier = Modifier
                     .fillMaxSize()
-                    .padding(WindowInsets.statusBars.asPaddingValues()).padding(top = 16.dp),
+                    .padding(WindowInsets.statusBars.asPaddingValues()),
                     content = {
                         // NavHost para determinar las rutas y pantallas para navegar
                         NavHost(navController = navController, startDestination = "TaskScreenNav",
@@ -90,12 +121,14 @@ fun BottomNavigation(navHostController: NavHostController){
         mutableIntStateOf(0)
     }
 
-    NavigationBar(containerColor = Color(0XFFA5E7FF)) {
+    NavigationBar(containerColor = MaterialTheme.colorScheme.onPrimary) {
         NavigationBarItem(selected = selectedIcon == 0, onClick = {
             selectedIcon = 0
             navHostController.navigate("TaskScreenNav")
         }, icon = {
-            IconMenu(R.drawable.list_solid, "First icon of the menu called: task list")
+            IconMenu(
+                R.drawable.list_solid, "First icon of the menu called: task list",
+            )
 
         })
 
@@ -119,6 +152,6 @@ fun BottomNavigation(navHostController: NavHostController){
 @Composable
 fun IconMenu(@DrawableRes image:Int, description:String){
     Icon(painter = painterResource(id = image), contentDescription = description,
-        modifier = Modifier.size(35.dp), tint = Color.Black)
+        modifier = Modifier.size(35.dp), tint = MaterialTheme.colorScheme.onSurface)
 }
 

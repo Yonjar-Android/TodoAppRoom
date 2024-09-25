@@ -67,8 +67,6 @@ import androidx.paging.compose.itemContentType
 import androidx.paging.compose.itemKey
 import com.example.todoapproom.R
 import com.example.todoapproom.domain.model.TaskModel
-import com.example.todoapproom.ui.theme.bgColor
-import com.example.todoapproom.ui.theme.buttonColor
 import com.example.todoapproom.utils.SoundPlayer
 
 @Composable
@@ -429,7 +427,9 @@ fun DialogCreateTask(
                     focusedContainerColor = Color.White,
                     unfocusedContainerColor = Color.White,
                     focusedIndicatorColor = Color.Transparent,
-                    unfocusedIndicatorColor = Color.Transparent
+                    unfocusedIndicatorColor = Color.Transparent,
+                    unfocusedTextColor = Color.Black,
+                    focusedTextColor = Color.Black
                 )
             )
 
@@ -442,6 +442,7 @@ fun DialogCreateTask(
                     closeDialog()
                 },
                 colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.onSecondary),
+                border = BorderStroke(1.dp, MaterialTheme.colorScheme.onSurface)
             ) {
                 Text(
                     text = buttonText,
