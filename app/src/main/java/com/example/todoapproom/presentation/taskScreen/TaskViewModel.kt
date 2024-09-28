@@ -4,8 +4,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
-import com.example.todoapproom.data.repositories.RepositoryCRUDImp
 import com.example.todoapproom.domain.model.TaskModel
+import com.example.todoapproom.domain.repositories.IRepositoryCRUD
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -16,7 +16,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class TaskViewModel @Inject constructor(
-    private val repositoryCRUDImp: RepositoryCRUDImp
+    private val repositoryCRUDImp: IRepositoryCRUD
 ) :
     ViewModel() {
 
