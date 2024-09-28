@@ -35,6 +35,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -76,7 +77,8 @@ fun TaskCompletedScreen(viewModel: TasksCompletedViewModel) {
             fontSize = 32.sp,
             fontWeight = FontWeight.SemiBold,
             fontStyle = FontStyle.Italic,
-            textAlign = TextAlign.Center
+            textAlign = TextAlign.Center,
+            modifier = Modifier.testTag("TaskCompletedScreen")
         )
 
         Spacer(modifier = Modifier.size(15.dp))
