@@ -3,12 +3,13 @@ package com.example.todoapproom.repositorie
 import androidx.paging.PagingData
 import com.example.todoapproom.domain.model.TaskModel
 import com.example.todoapproom.domain.repositories.IRepositoryCRUD
+import com.example.todoapproom.motherObject.MotherObjectUITest
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
 
 class FakeRepositoryCRUD : IRepositoryCRUD {
 
-    private val tasks = mutableListOf<TaskModel>()
+    private val tasks = MotherObjectUITest.exampleTasks
 
     override fun getTasks(): Flow<PagingData<TaskModel>> {
         val pagingData = PagingData.from(tasks)

@@ -53,6 +53,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -139,6 +140,7 @@ fun TaskScreen(viewModel: TaskViewModel) {
                 title = stringResource(id = R.string.strAddTask),
                 textFieldValue = "",
                 buttonText = stringResource(id = R.string.strAdd),
+                testTag = "addTaskButton",
                 closeDialog = {
                     showMenuCreate = false
                 },
@@ -238,7 +240,8 @@ fun TaskItem(
             },
                 openEdit = {
                     showEditDialog = true
-                }
+                },
+                numberTest = taskItem.taskId
             )
 
             // Muestra un diálogo que te muestra el nombre completo de la tarea en caso de que sea muy larga
@@ -277,6 +280,7 @@ fun TaskItem(
                         title = stringResource(id = R.string.strEditTask),
                         buttonText = stringResource(id = R.string.strUpdate),
                         textFieldValue = taskItem.taskName,
+                        testTag = "editTaskButton",
                         closeDialog = {
                             showEditDialog = false
                         },
@@ -314,7 +318,7 @@ fun MyFabAddButton(showMenuCreate: () -> Unit) {
         onClick = {
             showMenuCreate()
         },
-        modifier = Modifier.size(65.dp),
+        modifier = Modifier.size(65.dp).testTag("FabAddButton"),
         colors = IconButtonDefaults.iconButtonColors(containerColor = MaterialTheme.colorScheme.onSecondary)
     ) {
         Icon(imageVector = Icons.Filled.Add, contentDescription = "Button to add a task")
@@ -323,7 +327,7 @@ fun MyFabAddButton(showMenuCreate: () -> Unit) {
 
 
 @Composable
-fun DropDownMenuTask(openDialog: () -> Unit, openEdit: () -> Unit) {
+fun DropDownMenuTask(openDialog: () -> Unit, openEdit: () -> Unit, numberTest:Int) {
     var expanded by remember {
         mutableStateOf(false)
     }
@@ -335,7 +339,7 @@ fun DropDownMenuTask(openDialog: () -> Unit, openEdit: () -> Unit) {
             Icon(
                 imageVector = Icons.Filled.MoreVert,
                 contentDescription = "Icon called three points, it is menu of the task",
-                modifier = Modifier.size(30.dp)
+                modifier = Modifier.size(30.dp).testTag("${numberTest}threePointsIcon")
             )
         }
 
@@ -378,6 +382,7 @@ fun DialogCreateTask(
     title: String,
     buttonText: String,
     textFieldValue: String,
+    testTag:String,
     closeDialog: () -> Unit,
     actionFunc: (String) -> Unit
 ) {
@@ -406,7 +411,7 @@ fun DialogCreateTask(
                     Icon(
                         imageVector = Icons.Filled.Clear,
                         contentDescription = "Close Button",
-                        modifier = Modifier.size(35.dp)
+                        modifier = Modifier.size(35.dp).testTag("closeButton")
                     )
                 }
             }
@@ -436,7 +441,7 @@ fun DialogCreateTask(
             EditSpacer()
 
             Button(
-                modifier = Modifier.padding(10.dp),
+                modifier = Modifier.padding(10.dp).testTag(testTag),
                 onClick = {
                     actionFunc(textValue)
                     closeDialog()
@@ -477,7 +482,7 @@ fun DeleteDialog(closeDialog: () -> Unit, deleteTask: () -> Unit) {
         }, dismissButton = {
             TextButton(onClick = {
                 closeDialog()
-            }) {
+            }, modifier = Modifier.testTag("deleteButtonDialog")) {
                 Text(
                     text = stringResource(id = R.string.strCancel),
                     fontSize = 14.sp,
@@ -494,7 +499,7 @@ fun DeleteDialog(closeDialog: () -> Unit, deleteTask: () -> Unit) {
             )
         },
         text = {
-            Text(text = stringResource(id = R.string.strWouldYouDeleteTask), fontSize = 18.sp)
+            Text(text = stringResource(id = R.string.strWouldYouDeleteTask), fontSize = 18.sp, modifier = Modifier.testTag("tagDeleteThisTagTest"))
         })
 }
 
