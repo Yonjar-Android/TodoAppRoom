@@ -22,13 +22,11 @@ android {
         versionCode = 1
         versionName = "1.0"
 
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner = "com.example.todoapproom.AndroidCustomRunner"
         vectorDrawables {
             useSupportLibrary = true
         }
     }
-
-
 
     buildTypes {
         release {
@@ -39,6 +37,22 @@ android {
             )
         }
     }
+
+    packaging {
+        resources {
+            excludes += listOf(
+                "/META-INF/LICENSE.md",
+                "/META-INF/LICENSE",
+                "/META-INF/ASL2.0",
+                "/META-INF/DEPENDENCIES",
+                "/META-INF/NOTICE",
+                "/META-INF/NOTICE.txt",
+                "/META-INF/ASL2.0",
+                "META-INF/LICENSE-notice.md"
+            )
+        }
+    }
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
@@ -110,6 +124,11 @@ dependencies {
     //Dagger Hilt
     implementation(libs.hilt.android)
     kapt(libs.hilt.android.compiler)
+
+    // For instrumented tests.
+    androidTestImplementation(libs.hilt.android.testing)
+    // ...with Kotlin.
+    kaptAndroidTest(libs.hilt.android.compiler)
 
     // Paging 3
     implementation(libs.androidx.paging.runtime.ktx)
