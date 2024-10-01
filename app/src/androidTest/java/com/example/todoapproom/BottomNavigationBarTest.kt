@@ -46,9 +46,7 @@ class BottomNavigationBarTest {
                         composable("TaskScreenNav") {
                             TaskScreen(taskViewModel)
                         }
-                        composable("ClockScreenNav") {
-                            ClockScreen()
-                        }
+
                         composable("TaskScreenCompletedNav") {
                             TaskCompletedScreen(taskCompletedViewModel)
                         }
@@ -61,51 +59,9 @@ class BottomNavigationBarTest {
         composeTestRule.onNodeWithContentDescription("First icon of the menu called: task list")
             .performClick()
 
-        // Verifica si se navega correctamente al pulsar el icono del reloj
-        composeTestRule.onNodeWithContentDescription("Second icon of the menu called: clock")
-            .performClick()
-
         // Verifica si se navega correctamente al pulsar el icono de tareas completadas
-        composeTestRule.onNodeWithContentDescription("Third icon of the menu called: completed tasks")
+        composeTestRule.onNodeWithContentDescription("Second icon of the menu called: completed tasks")
             .performClick()
-    }
-
-    @Test
-    fun testNavigationToClockScreen() {
-        val taskViewModel = TaskViewModel(FakeRepositoryCRUD())
-        val taskCompletedViewModel = TasksCompletedViewModel(FakeRepositoryCRUD())
-
-        composeTestRule.setContent {
-            TodoAppRoomTheme {
-                val navController = rememberNavController()
-                Scaffold(
-                    bottomBar = { BottomNavigation(navHostController = navController) }
-                ) {
-                    NavHost(
-                        navController = navController,
-                        startDestination = "TaskScreenNav",
-                        modifier = Modifier.padding(it)
-                    ) {
-                        composable("TaskScreenNav") {
-                            TaskScreen(taskViewModel)
-                        }
-                        composable("ClockScreenNav") {
-                            ClockScreen()
-                        }
-                        composable("TaskScreenCompletedNav") {
-                            TaskCompletedScreen(taskCompletedViewModel)
-                        }
-                    }
-                }
-            }
-        }
-
-        // Verifica si se navega correctamente al pulsar el icono del reloj
-        composeTestRule.onNodeWithContentDescription("Second icon of the menu called: clock")
-            .performClick()
-
-        // Aquí puedes verificar que el contenido de la pantalla del reloj se muestra correctamente
-        composeTestRule.onNodeWithTag("ClockScreen").assertIsDisplayed()
     }
 
     @Test
@@ -139,7 +95,7 @@ class BottomNavigationBarTest {
         }
 
         // Verifica si se navega correctamente al pulsar el icono de tareas completadas
-        composeTestRule.onNodeWithContentDescription("Third icon of the menu called: completed tasks")
+        composeTestRule.onNodeWithContentDescription("Second icon of the menu called: completed tasks")
             .performClick()
 
         // Aquí puedes verificar que el contenido de la pantalla de tareas completadas se muestra correctamente

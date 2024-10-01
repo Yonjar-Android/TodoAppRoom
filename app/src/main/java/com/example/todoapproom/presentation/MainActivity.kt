@@ -36,7 +36,6 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.todoapproom.R
-import com.example.todoapproom.presentation.clockScreen.ClockScreen
 import com.example.todoapproom.presentation.taskCompletedScreen.TaskCompletedScreen
 import com.example.todoapproom.presentation.taskCompletedScreen.TasksCompletedViewModel
 import com.example.todoapproom.presentation.taskScreen.TaskScreen
@@ -101,10 +100,6 @@ class MainActivity : ComponentActivity() {
                             composable("TaskScreenCompletedNav"){
                                 TaskCompletedScreen(tasksCompletedViewModel)
                             }
-
-                            composable("ClockScreenNav"){
-                                ClockScreen()
-                            }
                         }
                     },
                     bottomBar = {BottomNavigation(navController)}
@@ -134,16 +129,9 @@ fun BottomNavigation(navHostController: NavHostController){
 
         NavigationBarItem(selected = selectedIcon == 1, onClick = {
             selectedIcon = 1
-            navHostController.navigate("ClockScreenNav")
-        }, icon = {
-            IconMenu(R.drawable.clock_solid, "Second icon of the menu called: clock")
-        })
-
-        NavigationBarItem(selected = selectedIcon == 2, onClick = {
-            selectedIcon = 2
             navHostController.navigate("TaskScreenCompletedNav")
         }, icon = {
-            IconMenu(R.drawable.list_check_solid, "Third icon of the menu called: completed tasks")
+            IconMenu(R.drawable.list_check_solid, "Second icon of the menu called: completed tasks")
         })
     }
 }
