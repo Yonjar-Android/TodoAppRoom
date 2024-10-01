@@ -137,6 +137,7 @@ fun TaskCompletedItem(task: TaskModel, onCheckedChangeValue: (Boolean) -> Unit) 
 
     Row(
         modifier = Modifier
+            .testTag("Task${task.taskId}")
             .fillMaxWidth()
             .background(MaterialTheme.colorScheme.onPrimary)
             .padding(10.dp)
@@ -153,7 +154,7 @@ fun TaskCompletedItem(task: TaskModel, onCheckedChangeValue: (Boolean) -> Unit) 
                 isCompleted = !isCompleted
                 onCheckedChangeValue(isCompleted)
             },
-            modifier = Modifier
+            modifier = Modifier.testTag("check${task.taskId}")
                 .clip(CircleShape)
                 .border(border = BorderStroke(1.dp, color = Color.White), shape = CircleShape)
                 .size(30.dp)
@@ -180,7 +181,7 @@ fun TaskCompletedItem(task: TaskModel, onCheckedChangeValue: (Boolean) -> Unit) 
 
         // Muestra un diálogo que te muestra el nombre completo de la tarea en caso de que sea muy larga
         if (showFullTask) {
-            AlertDialog(onDismissRequest = {}, confirmButton = {
+            AlertDialog(modifier = Modifier.testTag("TaskText${task.taskId}"),onDismissRequest = {}, confirmButton = {
                 TextButton(onClick = { showFullTask = false }) {
                     Text(
                         text = "OK",

@@ -28,7 +28,7 @@ object MotherObjectUITest {
         ),
         TaskModel(
             taskId = 4,
-            taskName = "Call mom",
+            taskName = "Task 4",
             isCompleted = true,
             creationDate = System.currentTimeMillis() - 259200000L, // Creado hace tres días
             completedDate = System.currentTimeMillis() - 86400000L // Completado hace un día
