@@ -12,7 +12,6 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.todoapproom.presentation.BottomNavigation
-import com.example.todoapproom.presentation.clockScreen.ClockScreen
 import com.example.todoapproom.presentation.taskCompletedScreen.TaskCompletedScreen
 import com.example.todoapproom.presentation.taskCompletedScreen.TasksCompletedViewModel
 import com.example.todoapproom.presentation.taskScreen.TaskScreen
@@ -83,9 +82,7 @@ class BottomNavigationBarTest {
                         composable("TaskScreenNav") {
                             TaskScreen(taskViewModel)
                         }
-                        composable("ClockScreenNav") {
-                            ClockScreen()
-                        }
+
                         composable("TaskScreenCompletedNav") {
                             TaskCompletedScreen(taskCompletedViewModel)
                         }
